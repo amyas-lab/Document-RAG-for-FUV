@@ -1,0 +1,27 @@
+# --- RAG core ---
+langchain-core>=0.3
+langchain-text-splitters>=0.3
+langchain-ollama>=0.3
+langchain-qdrant>=0.2
+qdrant-client>=1.12
+fastembed>=0.4            # BM25 sparse vectors for hybrid search (ONNX, no torch)
+
+# --- PDF processing ---
+pypdf>=5.0                # baseline parser
+pymupdf>=1.24             # improved parser (+ page rendering for OCR)
+pymupdf4llm>=0.0.17       # PDF -> Markdown (headings, tables)
+pytesseract>=0.3.10       # OCR wrapper (needs the tesseract binary)
+pillow>=10.0
+
+# --- Config / utils ---
+pyyaml>=6.0
+python-dotenv>=1.0
+requests>=2.31
+
+# --- Serving (Task 4) ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+streamlit>=1.40
+
+# --- Dev ---
+pytest>=8.0

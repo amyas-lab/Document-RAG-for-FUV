@@ -1,0 +1,34 @@
+# RAG configuration. Every key can be overridden by an environment variable
+# with the same name in UPPER_CASE (e.g. LLM_MODEL=qwen2.5:1.5b).
+# Relative paths are resolved against this file's folder (source_code/).
+
+# --- Documents ---
+data_dir: data/documents          # *.pdf and *.txt files to index (searched recursively)
+collection_prefix: math_handbook  # Qdrant collection = <prefix>__<embed>__<parser>__<chunking>
+
+# --- PDF processing (Task 1) ---
+pdf_parser: pymupdf               # pypdf (baseline) | pymupdf (pymupdf4llm -> Markdown)
+ocr_enabled: true                 # OCR pages that have no text layer (Tesseract)
+ocr_dpi: 300
+ocr_min_chars: 50                 # a page with fewer extractable characters is treated as image-only
+
+# --- Chunking ---
+chunking: structure               # fixed (baseline recursive splitter) | structure (heading-aware)
+chunk_size: 1200                  # max characters per chunk
+chunk_overlap: 150                # used by the fixed splitter / hard splits
+
+# --- Models (served by Ollama) ---
+ollama_url: http://127.0.0.1:11434
+embed_model: nomic-embed-text
+llm_model: qwen2.5:3b
+temperature: 0.1
+num_ctx: 8192                     # LLM context window (tokens)
+
+# --- Vector database (Qdrant) ---
+qdrant_url: ""                    # e.g. http://qdrant:6333 (server mode, used in Docker)
+qdrant_path: data/qdrant_local    # embedded mode, used when qdrant_url is empty
+retrieval_mode: hybrid            # hybrid (dense + BM25, RRF fusion) | dense
+top_k: 5
+
+# --- Generation ---
+prompt_mode: strict               # strict (handbook only) | fallback (baseline: allow general knowledge)
