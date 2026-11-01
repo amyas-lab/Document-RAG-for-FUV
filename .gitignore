@@ -1,0 +1,26 @@
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+
+# Secrets / local config
+.env
+
+# Generated data (rebuilt from the PDFs)
+source_code/data/qdrant_local/
+source_code/data/extracted/
+**/vector_store/
+
+# Office lock files shipped in the assignment folder
+**/~$*
+
+# Large media (videos are linked from demo_video/links.md)
+*.mp4
+*.mov
