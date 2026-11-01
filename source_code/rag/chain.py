@@ -36,6 +36,7 @@ class RAGPipeline:
             {
                 "source": d.metadata.get("source"),
                 "page": d.metadata.get("page"),
+                "pages": d.metadata.get("pages") or [d.metadata.get("page")],
                 "section": d.metadata.get("section", ""),
                 "ocr": d.metadata.get("ocr", False),
                 "score": round(float(score), 4),
@@ -74,7 +75,7 @@ class RAGPipeline:
     def answer(self, question: str, history: list[dict] | None = None, *, model: str | None = None,
                top_k: int | None = None, temperature: float | None = None, mode: str | None = None) -> dict:
         query, sources, messages, t0, t1 = self._prepare(question, history, model, top_k, mode)
-        answer = self.llm(model, temperature).invoke(messages).content.strip()
+        answer = prompts.strip_dangling_refusal(self.llm(model, temperature).invoke(messages).content.strip())
         t2 = time.perf_counter()
         return {
             "answer": answer,
@@ -97,7 +98,7 @@ class RAGPipeline:
                 yield "token", chunk.content
         t2 = time.perf_counter()
         yield "done", {
-            "answer": "".join(parts).strip(),
+            "answer": prompts.strip_dangling_refusal("".join(parts).strip()),
             "sources": sources,
             "standalone_query": query,
             "model": model or self.cfg.llm_model,

@@ -12,7 +12,9 @@ You answer questions using ONLY the excerpts from the official Applied Mathemati
 
 Rules:
 1. Use only facts stated in the excerpts. Never use outside knowledge and never guess.
-2. If the excerpts do not contain the answer, reply exactly: "{NOT_FOUND}"
+2. If NONE of the excerpts is relevant to the question, reply exactly: "{NOT_FOUND}" and nothing else.
+   If the excerpts answer the question only partly, give the part you found and say what is missing;
+   never append the sentence above to an answer.
 3. Copy numbers, credits, course codes and requirements exactly as written.
 4. If two excerpts contradict each other, say so and report both versions.
 5. End with the page numbers you used, e.g. "(Source: p. 9, p. 21)".
@@ -51,3 +53,10 @@ def format_context(sources: list[dict]) -> str:
 def format_history(history: list[dict], max_turns: int = 4) -> str:
     turns = history[-2 * max_turns:]
     return "\n".join(f"{t['role'].upper()}: {t['content']}" for t in turns)
+
+
+def strip_dangling_refusal(answer: str) -> str:
+    """Small models sometimes answer and then append the refusal sentence anyway
+    (e.g. "...Linear Algebra. I couldn't find this in the ... handbook."). Keep the answer."""
+    rest = answer.replace(NOT_FOUND, "").strip()
+    return rest if NOT_FOUND in answer and len(rest) > 40 else answer
