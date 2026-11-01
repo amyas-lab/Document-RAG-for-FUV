@@ -14,7 +14,7 @@ __pycache__/
 .env
 
 # Generated data (rebuilt from the PDFs)
-source_code/data/qdrant_local/
+source_code/data/qdrant_*/
 source_code/data/extracted/
 **/vector_store/
 

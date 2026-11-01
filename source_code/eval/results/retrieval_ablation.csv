@@ -1,0 +1,673 @@
+parser,chunking,embed,retrieval,id,category,hit@1,hit@3,hit@5,mrr,page_recall,context_recall,retrieved_pages,latency_ms
+pypdf,fixed,nomic-embed-text,dense,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [9], [9], [14], [15]]",40
+pypdf,fixed,nomic-embed-text,dense,R2,program_requirements,0,1,1,0.5,1.0,1.0,"[[10], [9], [15], [9], [14]]",29
+pypdf,fixed,nomic-embed-text,dense,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [9], [10], [7]]",31
+pypdf,fixed,nomic-embed-text,dense,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [10], [15], [9]]",107
+pypdf,fixed,nomic-embed-text,dense,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [18], [14], [15], [5]]",48
+pypdf,fixed,nomic-embed-text,dense,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [14], [10], [7]]",43
+pypdf,fixed,nomic-embed-text,dense,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [7], [15], [18], [18]]",27
+pypdf,fixed,nomic-embed-text,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [15], [8], [10]]",40
+pypdf,fixed,nomic-embed-text,dense,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [15], [10]]",120
+pypdf,fixed,nomic-embed-text,dense,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [10], [15], [15], [14]]",70
+pypdf,fixed,nomic-embed-text,dense,C1,course_catalogue,0,0,0,0.0,0.0,1.0,"[[22], [26], [25], [26], [29]]",41
+pypdf,fixed,nomic-embed-text,dense,C2,course_catalogue,1,1,1,1.0,0.5,1.0,"[[26], [25], [28], [23], [24]]",54
+pypdf,fixed,nomic-embed-text,dense,C3,course_catalogue,0,0,1,0.25,1.0,1.0,"[[12], [13], [22], [21], [24]]",77
+pypdf,fixed,nomic-embed-text,dense,C4,course_catalogue,0,0,1,0.25,1.0,1.0,"[[22], [27], [23], [21], [24]]",66
+pypdf,fixed,nomic-embed-text,dense,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [13], [18], [20], [9]]",73
+pypdf,fixed,nomic-embed-text,dense,C6,course_catalogue,1,1,1,1.0,0.5,1.0,"[[28], [28], [24], [27], [26]]",94
+pypdf,fixed,nomic-embed-text,dense,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [7], [12], [14], [10]]",49
+pypdf,fixed,nomic-embed-text,dense,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[10], [14], [7], [9], [9]]",49
+pypdf,fixed,nomic-embed-text,dense,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [26], [25], [28], [24]]",36
+pypdf,fixed,nomic-embed-text,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [23], [26], [16], [29]]",52
+pypdf,fixed,nomic-embed-text,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [24], [28], [23], [11]]",71
+pypdf,fixed,nomic-embed-text,dense,D4,course_content,1,1,1,1.0,0.5,0.0,"[[28], [11], [27], [23], [22]]",28
+pypdf,fixed,nomic-embed-text,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [27], [23]]",31
+pypdf,fixed,nomic-embed-text,dense,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[16], [19], [6], [5], [1]]",64
+pypdf,fixed,nomic-embed-text,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [16], [4], [18]]",46
+pypdf,fixed,nomic-embed-text,dense,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5], [7], [17], [7]]",100
+pypdf,fixed,nomic-embed-text,dense,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[16], [18], [6], [26], [19]]",38
+pypdf,fixed,nomic-embed-text,dense,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [5], [14], [18], [15]]",27
+pypdf,fixed,nomic-embed-text,dense,T2,tracks_careers,0,1,1,0.5,1.0,1.0,"[[10], [7], [14], [7], [7]]",35
+pypdf,fixed,nomic-embed-text,dense,T3,tracks_careers,0,1,1,0.5,0.5,0.0,"[[5], [7], [7], [14], [19]]",52
+pypdf,fixed,nomic-embed-text,dense,P1,policies_assessment,0,0,0,0.0,0.0,0.667,"[[17], [7], [14], [18], [7]]",107
+pypdf,fixed,nomic-embed-text,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [9], [19], [18]]",26
+pypdf,fixed,nomic-embed-text,dense,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17], [7], [18], [5], [18]]",30
+pypdf,fixed,nomic-embed-text,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [13], [9], [11]]",33
+pypdf,fixed,nomic-embed-text,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [7]]",33
+pypdf,fixed,nomic-embed-text,dense,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [9], [14], [13], [15]]",52
+pypdf,fixed,nomic-embed-text,dense,A2,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [28], [22], [29], [22]]",63
+pypdf,fixed,nomic-embed-text,dense,A3,ambiguous,0,1,1,0.5,0.5,1.0,"[[28], [27], [22], [9], [28]]",49
+pypdf,fixed,nomic-embed-text,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [29], [28], [9]]",35
+pypdf,fixed,nomic-embed-text,dense,MT1,multi_turn,1,1,1,1.0,0.5,1.0,"[[25], [26], [24], [28], [9]]",35
+pypdf,fixed,nomic-embed-text,dense,MT2,multi_turn,1,1,1,1.0,0.5,1.0,"[[28], [27], [29], [27], [28]]",55
+pypdf,fixed,nomic-embed-text,dense,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [15], [9]]",70
+pypdf,fixed,nomic-embed-text,hybrid,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [15], [9], [9], [14]]",41
+pypdf,fixed,nomic-embed-text,hybrid,R2,program_requirements,0,1,1,0.5,1.0,1.0,"[[10], [9], [9], [15], [5]]",27
+pypdf,fixed,nomic-embed-text,hybrid,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [9], [10], [14], [14]]",57
+pypdf,fixed,nomic-embed-text,hybrid,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [10], [9], [15]]",70
+pypdf,fixed,nomic-embed-text,hybrid,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [5], [18], [14], [13]]",50
+pypdf,fixed,nomic-embed-text,hybrid,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [7], [15], [14]]",35
+pypdf,fixed,nomic-embed-text,hybrid,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [7], [15], [18], [20]]",34
+pypdf,fixed,nomic-embed-text,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [9], [15], [14]]",58
+pypdf,fixed,nomic-embed-text,hybrid,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [13], [15]]",86
+pypdf,fixed,nomic-embed-text,hybrid,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [10], [15], [15], [14]]",95
+pypdf,fixed,nomic-embed-text,hybrid,C1,course_catalogue,0,0,0,0.0,0.0,1.0,"[[22], [25], [26], [26], [17]]",35
+pypdf,fixed,nomic-embed-text,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [21], [25], [17], [28]]",61
+pypdf,fixed,nomic-embed-text,hybrid,C3,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [12], [25], [22], [24]]",68
+pypdf,fixed,nomic-embed-text,hybrid,C4,course_catalogue,0,0,0,0.0,0.0,0.0,"[[22], [22], [27], [7], [23]]",46
+pypdf,fixed,nomic-embed-text,hybrid,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [13], [9], [18], [20]]",33
+pypdf,fixed,nomic-embed-text,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [24], [22], [27]]",33
+pypdf,fixed,nomic-embed-text,hybrid,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [10], [12], [7], [25]]",61
+pypdf,fixed,nomic-embed-text,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[10], [9], [9], [14], [7]]",330
+pypdf,fixed,nomic-embed-text,hybrid,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [28], [26], [28], [25]]",57
+pypdf,fixed,nomic-embed-text,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [23], [26], [16], [24]]",44
+pypdf,fixed,nomic-embed-text,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [28], [11], [23], [24]]",32
+pypdf,fixed,nomic-embed-text,hybrid,D4,course_content,1,1,1,1.0,0.5,0.5,"[[28], [28], [11], [28], [27]]",82
+pypdf,fixed,nomic-embed-text,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [22], [27]]",75
+pypdf,fixed,nomic-embed-text,hybrid,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [19], [16], [15], [5]]",50
+pypdf,fixed,nomic-embed-text,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [16], [19], [4]]",34
+pypdf,fixed,nomic-embed-text,hybrid,L3,learning_outcomes,0,0,1,0.25,1.0,1.0,"[[18], [17], [7], [5], [5]]",56
+pypdf,fixed,nomic-embed-text,hybrid,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[6], [16], [18], [19], [9]]",103
+pypdf,fixed,nomic-embed-text,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [7], [5], [14], [18]]",57
+pypdf,fixed,nomic-embed-text,hybrid,T2,tracks_careers,0,1,1,0.5,1.0,1.0,"[[10], [7], [7], [14], [7]]",43
+pypdf,fixed,nomic-embed-text,hybrid,T3,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [5], [6], [7], [8]]",71
+pypdf,fixed,nomic-embed-text,hybrid,P1,policies_assessment,0,1,1,0.333,1.0,1.0,"[[7], [17], [19], [14], [9]]",49
+pypdf,fixed,nomic-embed-text,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [25], [9], [19]]",55
+pypdf,fixed,nomic-embed-text,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17], [18], [18], [7], [5]]",61
+pypdf,fixed,nomic-embed-text,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [13], [11], [10], [5]]",31
+pypdf,fixed,nomic-embed-text,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [6], [15]]",107
+pypdf,fixed,nomic-embed-text,hybrid,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [9], [14], [10], [13]]",56
+pypdf,fixed,nomic-embed-text,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [17], [28], [22], [22]]",39
+pypdf,fixed,nomic-embed-text,hybrid,A3,ambiguous,0,1,1,0.5,1.0,1.0,"[[28], [27], [21], [17], [22]]",33
+pypdf,fixed,nomic-embed-text,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [21], [17], [29]]",69
+pypdf,fixed,nomic-embed-text,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [21], [28], [26], [17]]",78
+pypdf,fixed,nomic-embed-text,hybrid,MT2,multi_turn,0,1,1,0.5,0.5,1.0,"[[27], [28], [21], [27], [29]]",45
+pypdf,fixed,nomic-embed-text,hybrid,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [9], [15], [14], [15]]",28
+pypdf,fixed,mxbai-embed-large,dense,R1,program_requirements,0,0,0,0.0,0.0,0.0,"[[1], [14], [7], [5], [9]]",79
+pypdf,fixed,mxbai-embed-large,dense,R2,program_requirements,0,0,0,0.0,0.0,0.0,"[[15], [14], [5], [1], [7]]",95
+pypdf,fixed,mxbai-embed-large,dense,R3,program_requirements,1,1,1,1.0,0.667,1.0,"[[10], [14], [11], [15], [14]]",66
+pypdf,fixed,mxbai-embed-large,dense,R4,program_requirements,1,1,1,1.0,0.5,1.0,"[[10], [14], [15], [15], [12]]",202
+pypdf,fixed,mxbai-embed-large,dense,R5,program_requirements,0,0,0,0.0,0.0,1.0,"[[1], [14], [15], [5], [13]]",133
+pypdf,fixed,mxbai-embed-large,dense,R6,program_requirements,0,0,1,0.2,1.0,1.0,"[[7], [14], [7], [5], [9]]",114
+pypdf,fixed,mxbai-embed-large,dense,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [15], [7], [14], [5]]",69
+pypdf,fixed,mxbai-embed-large,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [21], [15], [14]]",140
+pypdf,fixed,mxbai-embed-large,dense,M1,minor,0,0,0,0.0,0.0,1.0,"[[14], [5], [7], [15], [1]]",74
+pypdf,fixed,mxbai-embed-large,dense,M2,minor,1,1,1,1.0,0.5,1.0,"[[13], [15], [14], [15], [12]]",55
+pypdf,fixed,mxbai-embed-large,dense,C1,course_catalogue,0,0,1,0.2,1.0,1.0,"[[25], [25], [17], [22], [21]]",226
+pypdf,fixed,mxbai-embed-large,dense,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [17], [25], [27], [21]]",70
+pypdf,fixed,mxbai-embed-large,dense,C3,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [12], [14], [26], [27]]",114
+pypdf,fixed,mxbai-embed-large,dense,C4,course_catalogue,0,0,1,0.25,1.0,1.0,"[[28], [22], [16], [21], [24]]",60
+pypdf,fixed,mxbai-embed-large,dense,C5,course_catalogue,0,1,1,0.5,0.5,1.0,"[[13], [29], [20], [9], [8]]",61
+pypdf,fixed,mxbai-embed-large,dense,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [22], [27], [24]]",121
+pypdf,fixed,mxbai-embed-large,dense,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [14], [12], [5], [1]]",69
+pypdf,fixed,mxbai-embed-large,dense,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[14], [7], [15], [12], [5]]",94
+pypdf,fixed,mxbai-embed-large,dense,D1,course_content,0,1,1,0.5,1.0,1.0,"[[26], [25], [17], [28], [25]]",162
+pypdf,fixed,mxbai-embed-large,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [23], [16], [24], [26]]",52
+pypdf,fixed,mxbai-embed-large,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [23], [11], [24], [28]]",72
+pypdf,fixed,mxbai-embed-large,dense,D4,course_content,1,1,1,1.0,0.5,0.0,"[[28], [16], [11], [23], [14]]",309
+pypdf,fixed,mxbai-embed-large,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [22], [17]]",50
+pypdf,fixed,mxbai-embed-large,dense,L1,learning_outcomes,1,1,1,1.0,0.5,1.0,"[[16], [19], [1], [5], [14]]",59
+pypdf,fixed,mxbai-embed-large,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [4], [19], [16]]",75
+pypdf,fixed,mxbai-embed-large,dense,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5], [7], [7], [5]]",167
+pypdf,fixed,mxbai-embed-large,dense,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[16], [25], [16], [18], [29]]",224
+pypdf,fixed,mxbai-embed-large,dense,T1,tracks_careers,0,1,1,0.5,1.0,1.0,"[[15], [7], [5], [14], [1]]",66
+pypdf,fixed,mxbai-embed-large,dense,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [7], [14], [5], [5]]",69
+pypdf,fixed,mxbai-embed-large,dense,T3,tracks_careers,1,1,1,1.0,0.5,0.0,"[[7], [5], [7], [18], [5]]",126
+pypdf,fixed,mxbai-embed-large,dense,P1,policies_assessment,0,1,1,0.5,1.0,1.0,"[[14], [19], [19], [7], [18]]",59
+pypdf,fixed,mxbai-embed-large,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [9], [19], [25], [19]]",384
+pypdf,fixed,mxbai-embed-large,dense,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[18], [18], [7], [17], [5]]",284
+pypdf,fixed,mxbai-embed-large,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [11], [15], [15], [12]]",85
+pypdf,fixed,mxbai-embed-large,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [15], [15], [1], [5]]",160
+pypdf,fixed,mxbai-embed-large,dense,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [14], [13], [9], [22]]",84
+pypdf,fixed,mxbai-embed-large,dense,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [29], [17], [26], [22]]",97
+pypdf,fixed,mxbai-embed-large,dense,A3,ambiguous,0,1,1,0.333,0.5,1.0,"[[28], [25], [27], [17], [27]]",105
+pypdf,fixed,mxbai-embed-large,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [29], [22], [17], [25]]",61
+pypdf,fixed,mxbai-embed-large,dense,MT1,multi_turn,1,1,1,1.0,0.5,1.0,"[[25], [26], [17], [28], [25]]",84
+pypdf,fixed,mxbai-embed-large,dense,MT2,multi_turn,0,0,1,0.25,1.0,1.0,"[[27], [17], [27], [22], [28]]",136
+pypdf,fixed,mxbai-embed-large,dense,MT3,multi_turn,0,0,0,0.0,0.0,0.0,"[[14], [15], [15], [5], [7]]",55
+pypdf,fixed,mxbai-embed-large,hybrid,R1,program_requirements,0,0,1,0.2,1.0,1.0,"[[1], [15], [9], [14], [10]]",55
+pypdf,fixed,mxbai-embed-large,hybrid,R2,program_requirements,0,0,1,0.25,1.0,1.0,"[[15], [10], [14], [9], [5]]",108
+pypdf,fixed,mxbai-embed-large,hybrid,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [14], [9], [11]]",151
+pypdf,fixed,mxbai-embed-large,hybrid,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [9], [15], [10]]",73
+pypdf,fixed,mxbai-embed-large,hybrid,R5,program_requirements,0,1,1,0.333,1.0,1.0,"[[5], [1], [10], [14], [15]]",70
+pypdf,fixed,mxbai-embed-large,hybrid,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [7], [14], [15]]",189
+pypdf,fixed,mxbai-embed-large,hybrid,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [7], [15], [20], [14]]",89
+pypdf,fixed,mxbai-embed-large,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [9], [21], [14]]",64
+pypdf,fixed,mxbai-embed-large,hybrid,M1,minor,0,1,1,0.5,1.0,1.0,"[[14], [10], [5], [13], [7]]",116
+pypdf,fixed,mxbai-embed-large,hybrid,M2,minor,1,1,1,1.0,0.5,1.0,"[[13], [15], [15], [14], [14]]",169
+pypdf,fixed,mxbai-embed-large,hybrid,C1,course_catalogue,0,1,1,0.333,1.0,1.0,"[[25], [17], [21], [25], [22]]",249
+pypdf,fixed,mxbai-embed-large,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [17], [21], [25], [27]]",260
+pypdf,fixed,mxbai-embed-large,hybrid,C3,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [25], [12], [24], [14]]",219
+pypdf,fixed,mxbai-embed-large,hybrid,C4,course_catalogue,0,0,0,0.0,0.0,0.0,"[[28], [22], [22], [7], [16]]",115
+pypdf,fixed,mxbai-embed-large,hybrid,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [13], [9], [20], [18]]",492
+pypdf,fixed,mxbai-embed-large,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [22], [27], [17]]",83
+pypdf,fixed,mxbai-embed-large,hybrid,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [10], [12], [14], [25]]",136
+pypdf,fixed,mxbai-embed-large,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[14], [10], [7], [9], [15]]",66
+pypdf,fixed,mxbai-embed-large,hybrid,D1,course_content,0,1,1,0.5,1.0,0.333,"[[28], [25], [26], [28], [17]]",54
+pypdf,fixed,mxbai-embed-large,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [23], [26], [16], [24]]",106
+pypdf,fixed,mxbai-embed-large,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [23], [11], [28], [24]]",72
+pypdf,fixed,mxbai-embed-large,hybrid,D4,course_content,1,1,1,1.0,0.5,0.5,"[[28], [28], [16], [14], [28]]",73
+pypdf,fixed,mxbai-embed-large,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [22], [17], [27]]",77
+pypdf,fixed,mxbai-embed-large,hybrid,L1,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[19], [16], [6], [1], [15]]",79
+pypdf,fixed,mxbai-embed-large,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [19], [4], [4]]",67
+pypdf,fixed,mxbai-embed-large,hybrid,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5], [7], [5], [17]]",79
+pypdf,fixed,mxbai-embed-large,hybrid,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[25], [16], [6], [18], [19]]",130
+pypdf,fixed,mxbai-embed-large,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [7], [15], [5], [14]]",71
+pypdf,fixed,mxbai-embed-large,hybrid,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [7], [7], [14], [10]]",112
+pypdf,fixed,mxbai-embed-large,hybrid,T3,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [7], [6], [5], [8]]",72
+pypdf,fixed,mxbai-embed-large,hybrid,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [7], [14], [19], [9]]",73
+pypdf,fixed,mxbai-embed-large,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [25], [19], [9], [20]]",170
+pypdf,fixed,mxbai-embed-large,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[18], [17], [18], [7], [18]]",67
+pypdf,fixed,mxbai-embed-large,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [11], [5], [15], [14]]",116
+pypdf,fixed,mxbai-embed-large,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [15], [10], [15], [6]]",124
+pypdf,fixed,mxbai-embed-large,hybrid,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [14], [10], [9], [13]]",57
+pypdf,fixed,mxbai-embed-large,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [17], [29], [22], [21]]",112
+pypdf,fixed,mxbai-embed-large,hybrid,A3,ambiguous,0,1,1,0.333,1.0,1.0,"[[28], [17], [21], [27], [27]]",82
+pypdf,fixed,mxbai-embed-large,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [17], [21], [22], [29]]",67
+pypdf,fixed,mxbai-embed-large,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [17], [21], [28], [26]]",132
+pypdf,fixed,mxbai-embed-large,hybrid,MT2,multi_turn,0,0,1,0.2,0.5,1.0,"[[27], [17], [27], [21], [22]]",62
+pypdf,fixed,mxbai-embed-large,hybrid,MT3,multi_turn,0,1,1,0.5,1.0,1.0,"[[14], [10], [15], [15], [9]]",65
+pypdf,structure,nomic-embed-text,dense,R1,program_requirements,0,1,1,0.5,1.0,1.0,"[[9], [9, 10], [5], [10], [14]]",64
+pypdf,structure,nomic-embed-text,dense,R2,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [10], [9], [15], [14]]",53
+pypdf,structure,nomic-embed-text,dense,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10, 11], [9, 10], [5], [14], [9]]",43
+pypdf,structure,nomic-embed-text,dense,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [14], [10, 11], [10], [9]]",40
+pypdf,structure,nomic-embed-text,dense,R5,program_requirements,0,1,1,0.5,1.0,1.0,"[[5], [10], [18], [15], [5]]",28
+pypdf,structure,nomic-embed-text,dense,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [14], [9, 10], [10]]",36
+pypdf,structure,nomic-embed-text,dense,R7,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [15], [7], [18], [9, 10]]",33
+pypdf,structure,nomic-embed-text,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9, 10], [15], [10, 11], [12]]",145
+pypdf,structure,nomic-embed-text,dense,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [15], [9, 10]]",42
+pypdf,structure,nomic-embed-text,dense,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [10], [15], [15], [14]]",32
+pypdf,structure,nomic-embed-text,dense,C1,course_catalogue,0,0,0,0.0,0.0,1.0,"[[25], [22], [26], [26], [24]]",54
+pypdf,structure,nomic-embed-text,dense,C2,course_catalogue,1,1,1,1.0,0.5,1.0,"[[26], [28], [25], [23], [25]]",89
+pypdf,structure,nomic-embed-text,dense,C3,course_catalogue,0,1,1,0.333,1.0,1.0,"[[12], [22], [21], [13], [7]]",37
+pypdf,structure,nomic-embed-text,dense,C4,course_catalogue,0,0,1,0.25,1.0,1.0,"[[23, 24], [22], [27, 28], [21], [28]]",37
+pypdf,structure,nomic-embed-text,dense,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [18], [13], [4, 5], [8]]",30
+pypdf,structure,nomic-embed-text,dense,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [24], [22], [28]]",39
+pypdf,structure,nomic-embed-text,dense,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [12], [5], [14], [7]]",80
+pypdf,structure,nomic-embed-text,dense,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[9], [9, 10], [14], [10], [5]]",65
+pypdf,structure,nomic-embed-text,dense,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [26], [28], [24], [24]]",47
+pypdf,structure,nomic-embed-text,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [6], [16], [28, 29]]",32
+pypdf,structure,nomic-embed-text,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [28], [14], [10, 11], [5]]",30
+pypdf,structure,nomic-embed-text,dense,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [14], [11], [5], [27]]",49
+pypdf,structure,nomic-embed-text,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [24], [22]]",128
+pypdf,structure,nomic-embed-text,dense,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [16], [19], [5], [16, 17]]",48
+pypdf,structure,nomic-embed-text,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [16], [4], [16, 17]]",40
+pypdf,structure,nomic-embed-text,dense,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5, 6], [5], [5], [7]]",48
+pypdf,structure,nomic-embed-text,dense,L4,learning_outcomes,0,1,1,0.333,1.0,1.0,"[[16], [6], [16, 17], [25], [26]]",116
+pypdf,structure,nomic-embed-text,dense,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [7], [5], [14], [15]]",36
+pypdf,structure,nomic-embed-text,dense,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [7], [10], [5], [14]]",29
+pypdf,structure,nomic-embed-text,dense,T3,tracks_careers,1,1,1,1.0,0.5,0.0,"[[7], [5], [7], [5], [9]]",35
+pypdf,structure,nomic-embed-text,dense,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [17], [14], [7], [18]]",94
+pypdf,structure,nomic-embed-text,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [18, 19], [19], [19], [6]]",63
+pypdf,structure,nomic-embed-text,dense,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17], [18], [18], [7], [5]]",47
+pypdf,structure,nomic-embed-text,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [11], [14], [5], [9]]",31
+pypdf,structure,nomic-embed-text,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [13]]",52
+pypdf,structure,nomic-embed-text,dense,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [9, 10], [14], [15], [13]]",72
+pypdf,structure,nomic-embed-text,dense,A2,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [29], [28], [24], [28, 29]]",53
+pypdf,structure,nomic-embed-text,dense,A3,ambiguous,1,1,1,1.0,0.5,1.0,"[[27, 28], [28], [22], [9, 10], [23, 24]]",33
+pypdf,structure,nomic-embed-text,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [9, 10], [28, 29], [27, 28]]",34
+pypdf,structure,nomic-embed-text,dense,MT1,multi_turn,1,1,1,1.0,0.5,1.0,"[[25], [26], [28], [9, 10], [25]]",52
+pypdf,structure,nomic-embed-text,dense,MT2,multi_turn,0,1,1,0.5,1.0,1.0,"[[27], [28, 29], [14], [22], [28]]",58
+pypdf,structure,nomic-embed-text,dense,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [9, 10], [15]]",44
+pypdf,structure,nomic-embed-text,hybrid,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [9], [5], [10], [15]]",41
+pypdf,structure,nomic-embed-text,hybrid,R2,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [10], [9], [15], [14]]",35
+pypdf,structure,nomic-embed-text,hybrid,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10, 11], [9, 10], [5], [14], [14]]",96
+pypdf,structure,nomic-embed-text,hybrid,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [10, 11], [10], [14], [14]]",92
+pypdf,structure,nomic-embed-text,hybrid,R5,program_requirements,0,1,1,0.5,1.0,1.0,"[[5], [10], [5], [9, 10], [18]]",37
+pypdf,structure,nomic-embed-text,hybrid,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [15], [14], [7]]",38
+pypdf,structure,nomic-embed-text,hybrid,R7,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [7], [15], [9, 10], [20]]",107
+pypdf,structure,nomic-embed-text,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9, 10], [9], [15], [14]]",49
+pypdf,structure,nomic-embed-text,hybrid,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [15], [13]]",44
+pypdf,structure,nomic-embed-text,hybrid,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [10], [15], [15], [14]]",29
+pypdf,structure,nomic-embed-text,hybrid,C1,course_catalogue,0,0,0,0.0,0.0,1.0,"[[25], [26], [22], [16, 17], [26]]",59
+pypdf,structure,nomic-embed-text,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [21], [28], [16, 17], [25]]",94
+pypdf,structure,nomic-embed-text,hybrid,C3,course_catalogue,0,0,0,0.0,0.0,0.75,"[[22], [12], [25], [13], [23, 24]]",39
+pypdf,structure,nomic-embed-text,hybrid,C4,course_catalogue,0,1,1,0.333,1.0,1.0,"[[23, 24], [7], [21], [22], [16, 17]]",31
+pypdf,structure,nomic-embed-text,hybrid,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [13], [18], [9, 10], [4, 5]]",36
+pypdf,structure,nomic-embed-text,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [22], [24], [11]]",46
+pypdf,structure,nomic-embed-text,hybrid,C7,course_catalogue,0,0,1,0.2,1.0,1.0,"[[13], [12], [10], [5], [22]]",40
+pypdf,structure,nomic-embed-text,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[9], [9, 10], [10], [5], [14]]",35
+pypdf,structure,nomic-embed-text,hybrid,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [28], [26], [24], [28]]",34
+pypdf,structure,nomic-embed-text,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [24], [6], [14]]",39
+pypdf,structure,nomic-embed-text,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [28], [14], [10, 11], [5]]",27
+pypdf,structure,nomic-embed-text,hybrid,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [28], [14], [27], [11]]",28
+pypdf,structure,nomic-embed-text,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [22], [24]]",50
+pypdf,structure,nomic-embed-text,hybrid,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [19], [16], [9, 10], [5]]",81
+pypdf,structure,nomic-embed-text,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [4], [16], [19]]",61
+pypdf,structure,nomic-embed-text,hybrid,L3,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[5, 6], [18], [7], [17], [5]]",44
+pypdf,structure,nomic-embed-text,hybrid,L4,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[6], [16, 17], [16], [18, 19], [25]]",55
+pypdf,structure,nomic-embed-text,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [7], [5], [14], [10]]",77
+pypdf,structure,nomic-embed-text,hybrid,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [10], [7], [4], [5]]",48
+pypdf,structure,nomic-embed-text,hybrid,T3,tracks_careers,1,1,1,1.0,0.5,0.0,"[[7], [7], [5], [7], [5]]",43
+pypdf,structure,nomic-embed-text,hybrid,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [7], [17], [9, 10], [14]]",32
+pypdf,structure,nomic-embed-text,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [18, 19], [25], [19], [19, 20]]",37
+pypdf,structure,nomic-embed-text,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17], [18], [18], [7], [7]]",104
+pypdf,structure,nomic-embed-text,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [14], [5], [11], [9, 10]]",57
+pypdf,structure,nomic-embed-text,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [6]]",30
+pypdf,structure,nomic-embed-text,hybrid,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [9, 10], [14], [10], [15]]",32
+pypdf,structure,nomic-embed-text,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [29], [16, 17], [28], [21]]",63
+pypdf,structure,nomic-embed-text,hybrid,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27, 28], [28], [21], [22], [16, 17]]",150
+pypdf,structure,nomic-embed-text,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [21], [27, 28], [9, 10]]",50
+pypdf,structure,nomic-embed-text,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [28], [21], [26], [9, 10]]",54
+pypdf,structure,nomic-embed-text,hybrid,MT2,multi_turn,0,0,1,0.25,0.5,1.0,"[[27], [21], [14], [28, 29], [16, 17]]",93
+pypdf,structure,nomic-embed-text,hybrid,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [9, 10], [15], [14], [15]]",56
+pypdf,structure,mxbai-embed-large,dense,R1,program_requirements,0,1,1,0.5,1.0,1.0,"[[9], [9, 10], [5], [5], [1]]",74
+pypdf,structure,mxbai-embed-large,dense,R2,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [10], [15], [9], [14]]",72
+pypdf,structure,mxbai-embed-large,dense,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10, 11], [9, 10], [14], [5], [9]]",93
+pypdf,structure,mxbai-embed-large,dense,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [14], [15], [10, 11], [10]]",72
+pypdf,structure,mxbai-embed-large,dense,R5,program_requirements,0,1,1,0.5,1.0,1.0,"[[1], [9, 10], [10], [14], [15]]",99
+pypdf,structure,mxbai-embed-large,dense,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [14], [7], [9, 10], [7]]",103
+pypdf,structure,mxbai-embed-large,dense,R7,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9, 10], [15], [14], [5]]",71
+pypdf,structure,mxbai-embed-large,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9, 10], [21], [22], [15]]",75
+pypdf,structure,mxbai-embed-large,dense,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [5], [9, 10]]",345
+pypdf,structure,mxbai-embed-large,dense,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [10], [15], [14], [15]]",52
+pypdf,structure,mxbai-embed-large,dense,C1,course_catalogue,0,0,1,0.25,1.0,1.0,"[[25], [22], [16, 17], [21], [26]]",52
+pypdf,structure,mxbai-embed-large,dense,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [28], [21], [25], [27]]",251
+pypdf,structure,mxbai-embed-large,dense,C3,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [22], [12], [26], [27]]",202
+pypdf,structure,mxbai-embed-large,dense,C4,course_catalogue,0,0,1,0.25,1.0,1.0,"[[23, 24], [28], [22], [21], [27, 28]]",72
+pypdf,structure,mxbai-embed-large,dense,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [13], [18], [8, 9], [8]]",206
+pypdf,structure,mxbai-embed-large,dense,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [22], [24]]",78
+pypdf,structure,mxbai-embed-large,dense,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[14], [13], [12], [1], [5]]",210
+pypdf,structure,mxbai-embed-large,dense,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[9, 10], [14], [15], [9], [10]]",73
+pypdf,structure,mxbai-embed-large,dense,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [26], [28], [27], [28]]",139
+pypdf,structure,mxbai-embed-large,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [28, 29], [16, 17], [26], [14]]",51
+pypdf,structure,mxbai-embed-large,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [27], [22, 23], [10, 11], [23]]",188
+pypdf,structure,mxbai-embed-large,dense,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [14], [25], [16, 17], [11]]",74
+pypdf,structure,mxbai-embed-large,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [24], [22]]",169
+pypdf,structure,mxbai-embed-large,dense,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[16], [16, 17], [6], [1], [19]]",84
+pypdf,structure,mxbai-embed-large,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [4], [16, 17], [16]]",183
+pypdf,structure,mxbai-embed-large,dense,L3,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[5, 6], [5], [18], [5], [6]]",199
+pypdf,structure,mxbai-embed-large,dense,L4,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[16, 17], [25], [16], [14], [26]]",104
+pypdf,structure,mxbai-embed-large,dense,T1,tracks_careers,0,1,1,0.5,1.0,1.0,"[[15], [5], [7], [5], [14]]",53
+pypdf,structure,mxbai-embed-large,dense,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [5], [5], [7], [14]]",56
+pypdf,structure,mxbai-embed-large,dense,T3,tracks_careers,0,1,1,0.5,0.5,0.0,"[[5], [7], [5], [7], [6]]",85
+pypdf,structure,mxbai-embed-large,dense,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [14], [19], [18], [18]]",102
+pypdf,structure,mxbai-embed-large,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [18, 19], [19], [6]]",203
+pypdf,structure,mxbai-embed-large,dense,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[18], [18], [7], [17], [5]]",179
+pypdf,structure,mxbai-embed-large,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [11], [9, 10], [14], [15]]",79
+pypdf,structure,mxbai-embed-large,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [13]]",240
+pypdf,structure,mxbai-embed-large,dense,A1,ambiguous,0,1,1,0.5,1.0,1.0,"[[13], [9, 10], [14], [12], [11]]",288
+pypdf,structure,mxbai-embed-large,dense,A2,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [29], [22], [26], [28, 29]]",76
+pypdf,structure,mxbai-embed-large,dense,A3,ambiguous,1,1,1,1.0,0.5,1.0,"[[27, 28], [28], [22], [16, 17], [28]]",220
+pypdf,structure,mxbai-embed-large,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [27, 28], [28], [29]]",48
+pypdf,structure,mxbai-embed-large,dense,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [28], [26], [27], [21]]",185
+pypdf,structure,mxbai-embed-large,dense,MT2,multi_turn,0,1,1,0.5,1.0,1.0,"[[27], [28], [22], [28], [29]]",56
+pypdf,structure,mxbai-embed-large,dense,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [9, 10], [15]]",89
+pypdf,structure,mxbai-embed-large,hybrid,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [9], [5], [15], [5]]",81
+pypdf,structure,mxbai-embed-large,hybrid,R2,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [10], [15], [9], [14]]",98
+pypdf,structure,mxbai-embed-large,hybrid,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10, 11], [9, 10], [14], [5], [10]]",175
+pypdf,structure,mxbai-embed-large,hybrid,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [10, 11], [10], [14], [15]]",165
+pypdf,structure,mxbai-embed-large,hybrid,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[9, 10], [1], [10], [5], [13]]",73
+pypdf,structure,mxbai-embed-large,hybrid,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [14], [15], [7]]",75
+pypdf,structure,mxbai-embed-large,hybrid,R7,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9, 10], [15], [7], [20]]",116
+pypdf,structure,mxbai-embed-large,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9, 10], [9], [21], [14]]",75
+pypdf,structure,mxbai-embed-large,hybrid,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [13], [5]]",254
+pypdf,structure,mxbai-embed-large,hybrid,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [10], [15], [15], [14]]",73
+pypdf,structure,mxbai-embed-large,hybrid,C1,course_catalogue,0,1,1,0.333,1.0,1.0,"[[25], [16, 17], [21], [22], [27]]",83
+pypdf,structure,mxbai-embed-large,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [21], [28], [16, 17], [25]]",68
+pypdf,structure,mxbai-embed-large,hybrid,C3,course_catalogue,0,1,1,0.5,1.0,1.0,"[[22], [21], [25], [23, 24], [12]]",55
+pypdf,structure,mxbai-embed-large,hybrid,C4,course_catalogue,0,1,1,0.333,1.0,1.0,"[[23, 24], [7], [21], [28], [16, 17]]",215
+pypdf,structure,mxbai-embed-large,hybrid,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [13], [18], [9, 10], [8, 9]]",55
+pypdf,structure,mxbai-embed-large,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [22], [27], [11]]",177
+pypdf,structure,mxbai-embed-large,hybrid,C7,course_catalogue,0,0,1,0.2,1.0,1.0,"[[13], [14], [10], [12], [22]]",55
+pypdf,structure,mxbai-embed-large,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[9, 10], [9], [10], [14], [15]]",308
+pypdf,structure,mxbai-embed-large,hybrid,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [28], [26], [24], [28]]",126
+pypdf,structure,mxbai-embed-large,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [28, 29], [24], [16, 17], [14]]",55
+pypdf,structure,mxbai-embed-large,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [10, 11], [27], [28], [22, 23]]",73
+pypdf,structure,mxbai-embed-large,hybrid,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [28], [16, 17], [14], [25]]",245
+pypdf,structure,mxbai-embed-large,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [22], [24]]",121
+pypdf,structure,mxbai-embed-large,hybrid,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [16], [19], [16, 17], [9, 10]]",75
+pypdf,structure,mxbai-embed-large,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [4], [19], [16, 17]]",87
+pypdf,structure,mxbai-embed-large,hybrid,L3,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[5, 6], [5], [6], [17], [18]]",131
+pypdf,structure,mxbai-embed-large,hybrid,L4,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[16, 17], [6], [25], [16], [18, 19]]",57
+pypdf,structure,mxbai-embed-large,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [5], [15], [7], [10]]",192
+pypdf,structure,mxbai-embed-large,hybrid,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [7], [5], [10], [5]]",124
+pypdf,structure,mxbai-embed-large,hybrid,T3,tracks_careers,1,1,1,1.0,0.5,0.0,"[[7], [7], [5], [5], [7]]",249
+pypdf,structure,mxbai-embed-large,hybrid,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [14], [9, 10], [19], [7]]",155
+pypdf,structure,mxbai-embed-large,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [18, 19], [19], [25], [19, 20]]",102
+pypdf,structure,mxbai-embed-large,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[18], [17], [18], [7], [7]]",231
+pypdf,structure,mxbai-embed-large,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [14], [9, 10], [11], [6]]",125
+pypdf,structure,mxbai-embed-large,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [6]]",60
+pypdf,structure,mxbai-embed-large,hybrid,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[9, 10], [13], [14], [10], [12]]",66
+pypdf,structure,mxbai-embed-large,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [22], [29], [16, 17], [21]]",187
+pypdf,structure,mxbai-embed-large,hybrid,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27, 28], [28], [21], [16, 17], [22]]",66
+pypdf,structure,mxbai-embed-large,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [21], [27, 28], [28]]",117
+pypdf,structure,mxbai-embed-large,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [21], [28], [26], [27]]",67
+pypdf,structure,mxbai-embed-large,hybrid,MT2,multi_turn,0,1,1,0.5,1.0,1.0,"[[27], [28], [21], [22], [16, 17]]",75
+pypdf,structure,mxbai-embed-large,hybrid,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [9, 10], [15], [14], [15]]",134
+pymupdf,fixed,nomic-embed-text,dense,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [9], [9], [14], [15]]",39
+pymupdf,fixed,nomic-embed-text,dense,R2,program_requirements,0,1,1,0.5,1.0,1.0,"[[10], [9], [9], [14], [15]]",34
+pymupdf,fixed,nomic-embed-text,dense,R3,program_requirements,1,1,1,1.0,1.0,0.75,"[[10], [9], [14], [7], [15]]",30
+pymupdf,fixed,nomic-embed-text,dense,R4,program_requirements,0,1,1,0.5,1.0,1.0,"[[14], [10], [15], [9], [15]]",79
+pymupdf,fixed,nomic-embed-text,dense,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [17], [18], [15], [14]]",65
+pymupdf,fixed,nomic-embed-text,dense,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [10], [7], [14]]",36
+pymupdf,fixed,nomic-embed-text,dense,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [7], [15], [18], [17]]",40
+pymupdf,fixed,nomic-embed-text,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [15], [8], [15]]",30
+pymupdf,fixed,nomic-embed-text,dense,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [15], [14], [15], [18]]",127
+pymupdf,fixed,nomic-embed-text,dense,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [15], [15], [10], [14]]",43
+pymupdf,fixed,nomic-embed-text,dense,C1,course_catalogue,0,0,1,0.2,1.0,1.0,"[[22], [25], [26], [13], [21]]",30
+pymupdf,fixed,nomic-embed-text,dense,C2,course_catalogue,1,1,1,1.0,0.5,1.0,"[[26], [26], [23], [28], [25]]",45
+pymupdf,fixed,nomic-embed-text,dense,C3,course_catalogue,0,0,1,0.25,1.0,1.0,"[[12], [13], [22], [21], [7]]",40
+pymupdf,fixed,nomic-embed-text,dense,C4,course_catalogue,0,0,1,0.2,1.0,1.0,"[[23], [27], [10], [22], [21]]",68
+pymupdf,fixed,nomic-embed-text,dense,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [18], [13], [20], [9]]",36
+pymupdf,fixed,nomic-embed-text,dense,C6,course_catalogue,1,1,1,1.0,0.5,0.0,"[[28], [24], [28], [27], [23]]",40
+pymupdf,fixed,nomic-embed-text,dense,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[7], [13], [12], [14], [15]]",28
+pymupdf,fixed,nomic-embed-text,dense,C8,course_catalogue,0,0,0,0.0,0.0,0.0,"[[10], [14], [7], [5], [7]]",26
+pymupdf,fixed,nomic-embed-text,dense,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [25], [17], [28], [26]]",24
+pymupdf,fixed,nomic-embed-text,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [16], [16], [6]]",53
+pymupdf,fixed,nomic-embed-text,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [23], [11], [28], [24]]",85
+pymupdf,fixed,nomic-embed-text,dense,D4,course_content,1,1,1,1.0,0.5,0.0,"[[28], [27], [11], [22], [5]]",30
+pymupdf,fixed,nomic-embed-text,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [27], [28], [28], [23]]",29
+pymupdf,fixed,nomic-embed-text,dense,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[16], [6], [19], [17], [5]]",28
+pymupdf,fixed,nomic-embed-text,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [16], [6], [6], [4]]",26
+pymupdf,fixed,nomic-embed-text,dense,L3,learning_outcomes,0,1,1,0.333,1.0,1.0,"[[18], [7], [5], [7], [17]]",67
+pymupdf,fixed,nomic-embed-text,dense,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[16], [18], [6], [25], [16]]",94
+pymupdf,fixed,nomic-embed-text,dense,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [5], [17], [14], [15]]",29
+pymupdf,fixed,nomic-embed-text,dense,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [10], [15], [7], [17]]",37
+pymupdf,fixed,nomic-embed-text,dense,T3,tracks_careers,0,1,1,0.5,0.5,0.0,"[[5], [7], [7], [17], [14]]",48
+pymupdf,fixed,nomic-embed-text,dense,P1,policies_assessment,0,0,0,0.0,0.0,0.667,"[[7], [14], [7], [18], [13]]",41
+pymupdf,fixed,nomic-embed-text,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [19], [25], [18]]",64
+pymupdf,fixed,nomic-embed-text,dense,P3,policies_assessment,0,1,1,0.333,0.5,0.667,"[[7], [7], [18], [18], [5]]",46
+pymupdf,fixed,nomic-embed-text,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [13], [14], [9], [7]]",36
+pymupdf,fixed,nomic-embed-text,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [7]]",41
+pymupdf,fixed,nomic-embed-text,dense,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [9], [14], [13], [15]]",52
+pymupdf,fixed,nomic-embed-text,dense,A2,ambiguous,0,1,1,0.333,0.5,1.0,"[[22], [28], [27], [22], [23]]",69
+pymupdf,fixed,nomic-embed-text,dense,A3,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [28], [22], [9], [28]]",41
+pymupdf,fixed,nomic-embed-text,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [29], [28], [9]]",41
+pymupdf,fixed,nomic-embed-text,dense,MT1,multi_turn,0,1,1,0.5,0.5,1.0,"[[26], [25], [9], [24], [25]]",32
+pymupdf,fixed,nomic-embed-text,dense,MT2,multi_turn,0,1,1,0.5,1.0,1.0,"[[27], [28], [29], [22], [28]]",47
+pymupdf,fixed,nomic-embed-text,dense,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [15], [14], [15], [9]]",50
+pymupdf,fixed,nomic-embed-text,hybrid,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [15], [9], [9], [14]]",53
+pymupdf,fixed,nomic-embed-text,hybrid,R2,program_requirements,0,1,1,0.5,1.0,1.0,"[[10], [9], [9], [15], [14]]",60
+pymupdf,fixed,nomic-embed-text,hybrid,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [9], [14], [14], [7]]",128
+pymupdf,fixed,nomic-embed-text,hybrid,R4,program_requirements,0,1,1,0.5,1.0,1.0,"[[14], [10], [9], [10], [15]]",44
+pymupdf,fixed,nomic-embed-text,hybrid,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [17], [5], [18], [13]]",28
+pymupdf,fixed,nomic-embed-text,hybrid,R6,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [7], [7], [15], [10]]",51
+pymupdf,fixed,nomic-embed-text,hybrid,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [7], [15], [20], [18]]",85
+pymupdf,fixed,nomic-embed-text,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [9], [15], [14]]",42
+pymupdf,fixed,nomic-embed-text,hybrid,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [15], [13]]",32
+pymupdf,fixed,nomic-embed-text,hybrid,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [15], [15], [10], [14]]",36
+pymupdf,fixed,nomic-embed-text,hybrid,C1,course_catalogue,0,1,1,0.333,1.0,1.0,"[[25], [22], [21], [25], [26]]",46
+pymupdf,fixed,nomic-embed-text,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [26], [21], [17], [23]]",95
+pymupdf,fixed,nomic-embed-text,hybrid,C3,course_catalogue,0,0,0,0.0,0.0,0.5,"[[12], [13], [25], [24], [22]]",53
+pymupdf,fixed,nomic-embed-text,hybrid,C4,course_catalogue,0,0,0,0.0,0.0,0.0,"[[23], [22], [27], [7], [10]]",30
+pymupdf,fixed,nomic-embed-text,hybrid,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [18], [13], [9], [20]]",31
+pymupdf,fixed,nomic-embed-text,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [24], [22], [27]]",52
+pymupdf,fixed,nomic-embed-text,hybrid,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [7], [10], [12], [25]]",82
+pymupdf,fixed,nomic-embed-text,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[10], [14], [9], [7], [9]]",60
+pymupdf,fixed,nomic-embed-text,hybrid,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [25], [28], [17], [24]]",37
+pymupdf,fixed,nomic-embed-text,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [16], [24], [16]]",32
+pymupdf,fixed,nomic-embed-text,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [28], [23], [11], [14]]",45
+pymupdf,fixed,nomic-embed-text,hybrid,D4,course_content,1,1,1,1.0,0.5,0.5,"[[28], [28], [27], [11], [12]]",63
+pymupdf,fixed,nomic-embed-text,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [27], [28], [22], [28]]",66
+pymupdf,fixed,nomic-embed-text,hybrid,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [16], [19], [19], [6]]",49
+pymupdf,fixed,nomic-embed-text,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [6], [16], [6]]",39
+pymupdf,fixed,nomic-embed-text,hybrid,L3,learning_outcomes,0,1,1,0.333,1.0,1.0,"[[18], [7], [5], [5], [7]]",120
+pymupdf,fixed,nomic-embed-text,hybrid,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[16], [9], [25], [18], [6]]",53
+pymupdf,fixed,nomic-embed-text,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [5], [5], [17], [14]]",45
+pymupdf,fixed,nomic-embed-text,hybrid,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [10], [15], [7], [7]]",56
+pymupdf,fixed,nomic-embed-text,hybrid,T3,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [5], [19], [7], [8]]",79
+pymupdf,fixed,nomic-embed-text,hybrid,P1,policies_assessment,0,1,1,0.5,1.0,1.0,"[[7], [19], [14], [9], [7]]",78
+pymupdf,fixed,nomic-embed-text,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [25], [19], [20]]",29
+pymupdf,fixed,nomic-embed-text,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,0.667,"[[18], [7], [17], [18], [7]]",33
+pymupdf,fixed,nomic-embed-text,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [13], [14], [6], [9]]",166
+pymupdf,fixed,nomic-embed-text,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [6], [15]]",118
+pymupdf,fixed,nomic-embed-text,hybrid,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [9], [14], [10], [13]]",113
+pymupdf,fixed,nomic-embed-text,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [22], [28], [17], [21]]",72
+pymupdf,fixed,nomic-embed-text,hybrid,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [28], [21], [22], [17]]",45
+pymupdf,fixed,nomic-embed-text,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [21], [29], [28]]",39
+pymupdf,fixed,nomic-embed-text,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [26], [21], [25], [28]]",35
+pymupdf,fixed,nomic-embed-text,hybrid,MT2,multi_turn,0,1,1,0.333,0.5,1.0,"[[27], [21], [28], [29], [14]]",37
+pymupdf,fixed,nomic-embed-text,hybrid,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [9], [15], [15], [14]]",46
+pymupdf,fixed,mxbai-embed-large,dense,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [1], [5], [7]]",79
+pymupdf,fixed,mxbai-embed-large,dense,R2,program_requirements,0,0,0,0.0,0.0,0.0,"[[10], [15], [14], [5], [1]]",142
+pymupdf,fixed,mxbai-embed-large,dense,R3,program_requirements,1,1,1,1.0,0.667,1.0,"[[10], [14], [11], [12], [14]]",60
+pymupdf,fixed,mxbai-embed-large,dense,R4,program_requirements,0,1,1,0.5,0.5,1.0,"[[14], [10], [12], [15], [15]]",217
+pymupdf,fixed,mxbai-embed-large,dense,R5,program_requirements,0,1,1,0.5,1.0,1.0,"[[1], [10], [14], [13], [17]]",57
+pymupdf,fixed,mxbai-embed-large,dense,R6,program_requirements,0,0,0,0.0,0.0,0.0,"[[14], [7], [7], [10], [5]]",234
+pymupdf,fixed,mxbai-embed-large,dense,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [13], [14], [15], [5]]",85
+pymupdf,fixed,mxbai-embed-large,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [10], [14], [21]]",153
+pymupdf,fixed,mxbai-embed-large,dense,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [5], [13]]",59
+pymupdf,fixed,mxbai-embed-large,dense,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [15], [10], [14], [12]]",169
+pymupdf,fixed,mxbai-embed-large,dense,C1,course_catalogue,0,1,1,0.5,1.0,1.0,"[[25], [21], [22], [26], [29]]",55
+pymupdf,fixed,mxbai-embed-large,dense,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [17], [21], [25], [27]]",77
+pymupdf,fixed,mxbai-embed-large,dense,C3,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [26], [14], [12], [13]]",131
+pymupdf,fixed,mxbai-embed-large,dense,C4,course_catalogue,0,1,1,0.333,1.0,1.0,"[[28], [24], [21], [22], [25]]",58
+pymupdf,fixed,mxbai-embed-large,dense,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [9], [20], [13], [8]]",127
+pymupdf,fixed,mxbai-embed-large,dense,C6,course_catalogue,1,1,1,1.0,0.5,1.0,"[[28], [27], [28], [24], [28]]",76
+pymupdf,fixed,mxbai-embed-large,dense,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[12], [14], [13], [5], [1]]",229
+pymupdf,fixed,mxbai-embed-large,dense,C8,course_catalogue,0,0,0,0.0,0.0,0.0,"[[14], [12], [5], [17], [10]]",50
+pymupdf,fixed,mxbai-embed-large,dense,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [26], [28], [21], [28]]",68
+pymupdf,fixed,mxbai-embed-large,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [28], [16], [17]]",80
+pymupdf,fixed,mxbai-embed-large,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [23], [17], [23], [28]]",81
+pymupdf,fixed,mxbai-embed-large,dense,D4,course_content,1,1,1,1.0,0.5,0.0,"[[28], [11], [14], [16], [17]]",182
+pymupdf,fixed,mxbai-embed-large,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [27], [28], [28], [17]]",87
+pymupdf,fixed,mxbai-embed-large,dense,L1,learning_outcomes,1,1,1,1.0,0.5,1.0,"[[16], [5], [1], [19], [14]]",48
+pymupdf,fixed,mxbai-embed-large,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [16], [19], [19]]",108
+pymupdf,fixed,mxbai-embed-large,dense,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5], [5], [7], [17]]",82
+pymupdf,fixed,mxbai-embed-large,dense,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[25], [16], [16], [18], [26]]",53
+pymupdf,fixed,mxbai-embed-large,dense,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [15], [5], [14], [17]]",67
+pymupdf,fixed,mxbai-embed-large,dense,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [7], [14], [5], [10]]",136
+pymupdf,fixed,mxbai-embed-large,dense,T3,tracks_careers,0,1,1,0.5,0.5,0.0,"[[5], [7], [7], [18], [19]]",100
+pymupdf,fixed,mxbai-embed-large,dense,P1,policies_assessment,0,1,1,0.5,1.0,1.0,"[[14], [19], [19], [18], [19]]",177
+pymupdf,fixed,mxbai-embed-large,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [6], [21], [25]]",154
+pymupdf,fixed,mxbai-embed-large,dense,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[18], [17], [17], [18], [7]]",56
+pymupdf,fixed,mxbai-embed-large,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [12], [13], [11], [15]]",53
+pymupdf,fixed,mxbai-embed-large,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [13], [15]]",60
+pymupdf,fixed,mxbai-embed-large,dense,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [14], [13], [9], [22]]",181
+pymupdf,fixed,mxbai-embed-large,dense,A2,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [29], [26], [22], [28]]",70
+pymupdf,fixed,mxbai-embed-large,dense,A3,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [28], [25], [29], [24]]",198
+pymupdf,fixed,mxbai-embed-large,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [29], [22], [27], [25]]",47
+pymupdf,fixed,mxbai-embed-large,dense,MT1,multi_turn,0,1,1,0.5,1.0,1.0,"[[26], [25], [28], [27], [21]]",61
+pymupdf,fixed,mxbai-embed-large,dense,MT2,multi_turn,0,1,1,0.5,1.0,1.0,"[[27], [22], [28], [29], [21]]",90
+pymupdf,fixed,mxbai-embed-large,dense,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [13], [15]]",63
+pymupdf,fixed,mxbai-embed-large,hybrid,R1,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [15], [14], [1], [9]]",66
+pymupdf,fixed,mxbai-embed-large,hybrid,R2,program_requirements,0,1,1,0.333,1.0,1.0,"[[10], [15], [9], [14], [9]]",116
+pymupdf,fixed,mxbai-embed-large,hybrid,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [14], [9], [11]]",69
+pymupdf,fixed,mxbai-embed-large,hybrid,R4,program_requirements,0,1,1,0.5,1.0,1.0,"[[14], [10], [10], [9], [12]]",69
+pymupdf,fixed,mxbai-embed-large,hybrid,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [1], [5], [14], [13]]",195
+pymupdf,fixed,mxbai-embed-large,hybrid,R6,program_requirements,0,1,1,0.333,1.0,1.0,"[[7], [14], [9], [15], [7]]",66
+pymupdf,fixed,mxbai-embed-large,hybrid,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [15], [13], [7], [14]]",172
+pymupdf,fixed,mxbai-embed-large,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[13], [9], [9], [10], [14]]",59
+pymupdf,fixed,mxbai-embed-large,hybrid,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [13], [15], [5]]",69
+pymupdf,fixed,mxbai-embed-large,hybrid,M2,minor,1,1,1,1.0,1.0,1.0,"[[13], [15], [10], [14], [14]]",167
+pymupdf,fixed,mxbai-embed-large,hybrid,C1,course_catalogue,0,1,1,0.5,1.0,1.0,"[[25], [21], [25], [22], [17]]",88
+pymupdf,fixed,mxbai-embed-large,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [26], [17], [26], [25]]",158
+pymupdf,fixed,mxbai-embed-large,hybrid,C3,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [25], [26], [13], [24]]",53
+pymupdf,fixed,mxbai-embed-large,hybrid,C4,course_catalogue,0,0,1,0.2,1.0,1.0,"[[28], [22], [24], [7], [21]]",121
+pymupdf,fixed,mxbai-embed-large,hybrid,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [9], [13], [20], [18]]",125
+pymupdf,fixed,mxbai-embed-large,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [22], [24]]",130
+pymupdf,fixed,mxbai-embed-large,hybrid,C7,course_catalogue,0,0,0,0.0,0.0,0.5,"[[13], [12], [10], [14], [25]]",70
+pymupdf,fixed,mxbai-embed-large,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[10], [14], [12], [9], [5]]",65
+pymupdf,fixed,mxbai-embed-large,hybrid,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [28], [21], [26], [25]]",128
+pymupdf,fixed,mxbai-embed-large,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [28], [24], [16]]",319
+pymupdf,fixed,mxbai-embed-large,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [23], [28], [17], [11]]",59
+pymupdf,fixed,mxbai-embed-large,hybrid,D4,course_content,1,1,1,1.0,0.5,0.5,"[[28], [28], [14], [11], [12]]",245
+pymupdf,fixed,mxbai-embed-large,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [27], [28], [22], [11]]",187
+pymupdf,fixed,mxbai-embed-large,hybrid,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[16], [6], [5], [19], [1]]",53
+pymupdf,fixed,mxbai-embed-large,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [16], [6], [19]]",59
+pymupdf,fixed,mxbai-embed-large,hybrid,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5], [7], [5], [9]]",247
+pymupdf,fixed,mxbai-embed-large,hybrid,L4,learning_outcomes,0,0,0,0.0,0.0,0.0,"[[25], [9], [16], [6], [16]]",138
+pymupdf,fixed,mxbai-embed-large,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [5], [5], [15], [14]]",53
+pymupdf,fixed,mxbai-embed-large,hybrid,T2,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [10], [7], [14], [7]]",59
+pymupdf,fixed,mxbai-embed-large,hybrid,T3,tracks_careers,1,1,1,1.0,1.0,1.0,"[[7], [19], [5], [7], [8]]",122
+pymupdf,fixed,mxbai-embed-large,hybrid,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [14], [9], [19], [7]]",163
+pymupdf,fixed,mxbai-embed-large,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [25], [6], [21]]",66
+pymupdf,fixed,mxbai-embed-large,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[18], [17], [18], [17], [18]]",55
+pymupdf,fixed,mxbai-embed-large,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [13], [11], [12], [6]]",77
+pymupdf,fixed,mxbai-embed-large,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [13], [6]]",74
+pymupdf,fixed,mxbai-embed-large,hybrid,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12], [14], [10], [9], [13]]",80
+pymupdf,fixed,mxbai-embed-large,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [22], [29], [17], [26]]",77
+pymupdf,fixed,mxbai-embed-large,hybrid,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [28], [21], [25], [17]]",84
+pymupdf,fixed,mxbai-embed-large,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [21], [27], [29]]",82
+pymupdf,fixed,mxbai-embed-large,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[21], [28], [26], [25], [17]]",86
+pymupdf,fixed,mxbai-embed-large,hybrid,MT2,multi_turn,0,1,1,0.333,1.0,1.0,"[[27], [21], [22], [28], [14]]",90
+pymupdf,fixed,mxbai-embed-large,hybrid,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [13], [15], [14], [9]]",103
+pymupdf,structure,nomic-embed-text,dense,R1,program_requirements,0,1,1,0.333,1.0,0.0,"[[9], [5], [10], [10], [9]]",51
+pymupdf,structure,nomic-embed-text,dense,R2,program_requirements,0,0,1,0.25,1.0,1.0,"[[10], [10], [15], [9], [5]]",131
+pymupdf,structure,nomic-embed-text,dense,R3,program_requirements,1,1,1,1.0,0.667,0.5,"[[10], [10], [12, 13], [5], [14]]",36
+pymupdf,structure,nomic-embed-text,dense,R4,program_requirements,0,1,1,0.5,1.0,1.0,"[[14], [10], [9], [10], [15]]",25
+pymupdf,structure,nomic-embed-text,dense,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [5], [18], [10], [15]]",25
+pymupdf,structure,nomic-embed-text,dense,R6,program_requirements,0,1,1,0.5,1.0,0.0,"[[10], [9], [7, 8], [14], [10]]",117
+pymupdf,structure,nomic-embed-text,dense,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [15], [7, 8], [15], [18]]",44
+pymupdf,structure,nomic-embed-text,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[12, 13], [10], [15], [9], [9, 10]]",43
+pymupdf,structure,nomic-embed-text,dense,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [10], [15], [5]]",31
+pymupdf,structure,nomic-embed-text,dense,M2,minor,1,1,1,1.0,1.0,1.0,"[[12, 13], [10], [15], [15], [15]]",52
+pymupdf,structure,nomic-embed-text,dense,C1,course_catalogue,0,1,1,0.5,1.0,1.0,"[[25], [21], [22], [21], [26]]",99
+pymupdf,structure,nomic-embed-text,dense,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [21], [17], [21], [11, 12]]",59
+pymupdf,structure,nomic-embed-text,dense,C3,course_catalogue,0,1,1,0.5,1.0,1.0,"[[22], [21], [12], [12, 13], [21]]",27
+pymupdf,structure,nomic-embed-text,dense,C4,course_catalogue,0,0,1,0.25,1.0,1.0,"[[23, 24], [22], [27, 28], [21], [21]]",24
+pymupdf,structure,nomic-embed-text,dense,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [18], [13], [9], [9]]",74
+pymupdf,structure,nomic-embed-text,dense,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [17], [22], [24]]",82
+pymupdf,structure,nomic-embed-text,dense,C7,course_catalogue,0,1,1,0.5,1.0,1.0,"[[12, 13], [22], [5], [7], [15]]",72
+pymupdf,structure,nomic-embed-text,dense,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[14], [10], [15], [5], [9]]",58
+pymupdf,structure,nomic-embed-text,dense,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [26], [28], [21], [24]]",75
+pymupdf,structure,nomic-embed-text,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [6], [16], [21]]",36
+pymupdf,structure,nomic-embed-text,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [28], [14], [17, 18], [18]]",37
+pymupdf,structure,nomic-embed-text,dense,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [11, 12], [14], [12, 13], [21]]",41
+pymupdf,structure,nomic-embed-text,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [17], [24]]",76
+pymupdf,structure,nomic-embed-text,dense,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [16], [6], [17], [16]]",110
+pymupdf,structure,nomic-embed-text,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [17], [17], [6]]",73
+pymupdf,structure,nomic-embed-text,dense,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5, 6], [5], [5], [7]]",68
+pymupdf,structure,nomic-embed-text,dense,L4,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[16], [17], [16], [17], [17]]",67
+pymupdf,structure,nomic-embed-text,dense,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [7], [12, 13], [5], [18]]",31
+pymupdf,structure,nomic-embed-text,dense,T2,tracks_careers,0,1,1,0.5,1.0,0.0,"[[5], [7], [10], [7, 8], [14]]",38
+pymupdf,structure,nomic-embed-text,dense,T3,tracks_careers,1,1,1,1.0,1.0,0.5,"[[7, 8], [7], [5], [5], [19]]",39
+pymupdf,structure,nomic-embed-text,dense,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [17, 18], [14], [12, 13], [7, 8]]",34
+pymupdf,structure,nomic-embed-text,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [18, 19], [19], [19], [15]]",111
+pymupdf,structure,nomic-embed-text,dense,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17, 18], [18], [18], [7], [5]]",60
+pymupdf,structure,nomic-embed-text,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [14], [11, 12], [12, 13], [10]]",46
+pymupdf,structure,nomic-embed-text,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [12, 13], [15], [5]]",28
+pymupdf,structure,nomic-embed-text,dense,A1,ambiguous,0,1,1,0.5,0.667,1.0,"[[15], [9, 10], [14], [9], [15]]",74
+pymupdf,structure,nomic-embed-text,dense,A2,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [29], [22], [21], [28]]",91
+pymupdf,structure,nomic-embed-text,dense,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27, 28], [22], [28], [21], [9]]",35
+pymupdf,structure,nomic-embed-text,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [21], [9], [29]]",25
+pymupdf,structure,nomic-embed-text,dense,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [21], [26], [21], [22]]",27
+pymupdf,structure,nomic-embed-text,dense,MT2,multi_turn,0,1,1,0.5,1.0,1.0,"[[27], [22], [21], [28, 29], [21]]",51
+pymupdf,structure,nomic-embed-text,dense,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [10], [15]]",75
+pymupdf,structure,nomic-embed-text,hybrid,R1,program_requirements,0,0,1,0.25,1.0,0.0,"[[5], [9], [9], [10], [10]]",40
+pymupdf,structure,nomic-embed-text,hybrid,R2,program_requirements,1,1,1,1.0,1.0,1.0,"[[9], [10], [10], [15], [9, 10]]",39
+pymupdf,structure,nomic-embed-text,hybrid,R3,program_requirements,1,1,1,1.0,0.667,1.0,"[[10], [10], [11, 12], [12, 13], [14]]",73
+pymupdf,structure,nomic-embed-text,hybrid,R4,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [14], [9], [10, 11], [10]]",68
+pymupdf,structure,nomic-embed-text,hybrid,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [5], [13], [18], [5]]",79
+pymupdf,structure,nomic-embed-text,hybrid,R6,program_requirements,1,1,1,1.0,1.0,0.0,"[[9], [10], [15], [7, 8], [7]]",73
+pymupdf,structure,nomic-embed-text,hybrid,R7,program_requirements,1,1,1,1.0,0.5,1.0,"[[13], [7, 8], [15], [20], [15]]",71
+pymupdf,structure,nomic-embed-text,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[12, 13], [10], [9], [15], [14]]",36
+pymupdf,structure,nomic-embed-text,hybrid,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [12, 13], [10], [15]]",42
+pymupdf,structure,nomic-embed-text,hybrid,M2,minor,1,1,1,1.0,1.0,1.0,"[[12, 13], [10], [15], [14], [15]]",35
+pymupdf,structure,nomic-embed-text,hybrid,C1,course_catalogue,0,1,1,0.5,1.0,1.0,"[[25], [21], [22], [17], [21]]",34
+pymupdf,structure,nomic-embed-text,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [26], [17], [21], [21]]",103
+pymupdf,structure,nomic-embed-text,hybrid,C3,course_catalogue,0,1,1,0.5,1.0,1.0,"[[22], [21], [25], [21], [12]]",63
+pymupdf,structure,nomic-embed-text,hybrid,C4,course_catalogue,0,0,0,0.0,0.0,0.0,"[[23, 24], [7], [22], [27, 28], [14]]",40
+pymupdf,structure,nomic-embed-text,hybrid,C5,course_catalogue,1,1,1,1.0,1.0,1.0,"[[29], [18], [13], [22], [9]]",36
+pymupdf,structure,nomic-embed-text,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [22], [28], [17], [24]]",58
+pymupdf,structure,nomic-embed-text,hybrid,C7,course_catalogue,1,1,1,1.0,1.0,1.0,"[[22], [12, 13], [10], [5], [7]]",84
+pymupdf,structure,nomic-embed-text,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[9], [10], [14], [5], [19]]",43
+pymupdf,structure,nomic-embed-text,hybrid,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [28], [21], [26], [28]]",37
+pymupdf,structure,nomic-embed-text,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [26], [24], [6], [14]]",68
+pymupdf,structure,nomic-embed-text,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [28], [14], [10, 11], [17, 18]]",41
+pymupdf,structure,nomic-embed-text,hybrid,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [28], [14], [11, 12], [27]]",52
+pymupdf,structure,nomic-embed-text,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [17], [22]]",58
+pymupdf,structure,nomic-embed-text,hybrid,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [16], [19], [17]]",31
+pymupdf,structure,nomic-embed-text,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [6], [17], [6]]",33
+pymupdf,structure,nomic-embed-text,hybrid,L3,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[5, 6], [18], [7], [5], [17, 18]]",59
+pymupdf,structure,nomic-embed-text,hybrid,L4,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[17], [16], [17], [6], [16]]",70
+pymupdf,structure,nomic-embed-text,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [7], [5], [12, 13], [10]]",43
+pymupdf,structure,nomic-embed-text,hybrid,T2,tracks_careers,0,1,1,0.333,1.0,1.0,"[[10], [5], [7], [7], [4]]",31
+pymupdf,structure,nomic-embed-text,hybrid,T3,tracks_careers,1,1,1,1.0,1.0,0.5,"[[7, 8], [7], [5], [7], [5]]",35
+pymupdf,structure,nomic-embed-text,hybrid,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [7, 8], [17, 18], [6], [14]]",59
+pymupdf,structure,nomic-embed-text,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [18, 19], [25], [19], [20]]",137
+pymupdf,structure,nomic-embed-text,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17, 18], [18], [18], [19], [7]]",38
+pymupdf,structure,nomic-embed-text,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [14], [12, 13], [11, 12], [6]]",29
+pymupdf,structure,nomic-embed-text,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [12, 13], [6], [15]]",52
+pymupdf,structure,nomic-embed-text,hybrid,A1,ambiguous,1,1,1,1.0,0.667,1.0,"[[14], [15], [10], [9], [9, 10]]",71
+pymupdf,structure,nomic-embed-text,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [17], [21], [29], [22]]",36
+pymupdf,structure,nomic-embed-text,hybrid,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27, 28], [21], [22], [28], [17]]",44
+pymupdf,structure,nomic-embed-text,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [21], [21], [9]]",42
+pymupdf,structure,nomic-embed-text,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[21], [25], [21], [22], [26]]",62
+pymupdf,structure,nomic-embed-text,hybrid,MT2,multi_turn,0,1,1,0.333,1.0,1.0,"[[27], [21], [22], [28, 29], [17]]",83
+pymupdf,structure,nomic-embed-text,hybrid,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [15], [14], [9], [10]]",41
+pymupdf,structure,mxbai-embed-large,dense,R1,program_requirements,0,0,1,0.25,1.0,0.0,"[[9], [5], [5], [10], [1]]",64
+pymupdf,structure,mxbai-embed-large,dense,R2,program_requirements,0,0,1,0.25,1.0,0.0,"[[10], [10], [15], [9], [5]]",60
+pymupdf,structure,mxbai-embed-large,dense,R3,program_requirements,1,1,1,1.0,0.667,1.0,"[[10], [11, 12], [14], [10, 11], [5]]",60
+pymupdf,structure,mxbai-embed-large,dense,R4,program_requirements,1,1,1,1.0,0.5,1.0,"[[10], [14], [15], [15], [10, 11]]",68
+pymupdf,structure,mxbai-embed-large,dense,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [9], [1], [10], [14]]",73
+pymupdf,structure,mxbai-embed-large,dense,R6,program_requirements,1,1,1,1.0,1.0,0.0,"[[9], [7, 8], [10], [14], [7]]",95
+pymupdf,structure,mxbai-embed-large,dense,R7,program_requirements,1,1,1,1.0,0.5,0.5,"[[13], [15], [7, 8], [18], [5]]",78
+pymupdf,structure,mxbai-embed-large,dense,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[12, 13], [9, 10], [10], [9], [22]]",68
+pymupdf,structure,mxbai-embed-large,dense,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [9], [10], [5]]",69
+pymupdf,structure,mxbai-embed-large,dense,M2,minor,1,1,1,1.0,1.0,1.0,"[[12, 13], [10], [15], [14], [15]]",117
+pymupdf,structure,mxbai-embed-large,dense,C1,course_catalogue,0,1,1,0.5,1.0,1.0,"[[25], [21], [21], [22], [21]]",72
+pymupdf,structure,mxbai-embed-large,dense,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[26], [21], [17], [28], [27]]",101
+pymupdf,structure,mxbai-embed-large,dense,C3,course_catalogue,0,1,1,0.5,1.0,1.0,"[[22], [21], [21], [12], [26]]",76
+pymupdf,structure,mxbai-embed-large,dense,C4,course_catalogue,0,0,1,0.25,1.0,1.0,"[[22], [23, 24], [28], [21], [21]]",65
+pymupdf,structure,mxbai-embed-large,dense,C5,course_catalogue,1,1,1,1.0,0.5,1.0,"[[29], [13], [18], [9], [8]]",72
+pymupdf,structure,mxbai-embed-large,dense,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [17], [27], [22]]",106
+pymupdf,structure,mxbai-embed-large,dense,C7,course_catalogue,1,1,1,1.0,1.0,1.0,"[[22], [12, 13], [14], [5], [5]]",62
+pymupdf,structure,mxbai-embed-large,dense,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[14], [7, 8], [15], [10], [15]]",66
+pymupdf,structure,mxbai-embed-large,dense,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [26], [28], [21], [22]]",104
+pymupdf,structure,mxbai-embed-large,dense,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [16], [28, 29], [17], [16]]",64
+pymupdf,structure,mxbai-embed-large,dense,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [27], [22, 23], [23], [20]]",73
+pymupdf,structure,mxbai-embed-large,dense,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [14], [16], [11, 12], [25]]",80
+pymupdf,structure,mxbai-embed-large,dense,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [17], [22]]",74
+pymupdf,structure,mxbai-embed-large,dense,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [16], [17], [15], [12, 13]]",70
+pymupdf,structure,mxbai-embed-large,dense,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [6], [4], [17]]",142
+pymupdf,structure,mxbai-embed-large,dense,L3,learning_outcomes,0,1,1,0.5,1.0,1.0,"[[18], [5, 6], [5], [7, 8], [9]]",92
+pymupdf,structure,mxbai-embed-large,dense,L4,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[17], [17], [16], [16], [17]]",67
+pymupdf,structure,mxbai-embed-large,dense,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [15], [5], [15], [7]]",147
+pymupdf,structure,mxbai-embed-large,dense,T2,tracks_careers,0,1,1,0.333,1.0,0.0,"[[5], [5], [7], [7, 8], [14]]",55
+pymupdf,structure,mxbai-embed-large,dense,T3,tracks_careers,1,1,1,1.0,1.0,0.5,"[[7, 8], [5], [7], [5], [9]]",87
+pymupdf,structure,mxbai-embed-large,dense,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [14], [7, 8], [19], [19]]",65
+pymupdf,structure,mxbai-embed-large,dense,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [19], [18, 19], [6], [6]]",75
+pymupdf,structure,mxbai-embed-large,dense,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17, 18], [7, 8], [18], [18], [5]]",65
+pymupdf,structure,mxbai-embed-large,dense,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [14], [10], [11, 12], [12, 13]]",109
+pymupdf,structure,mxbai-embed-large,dense,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [12, 13]]",71
+pymupdf,structure,mxbai-embed-large,dense,A1,ambiguous,1,1,1,1.0,1.0,1.0,"[[12, 13], [14], [11, 12], [14], [9, 10]]",69
+pymupdf,structure,mxbai-embed-large,dense,A2,ambiguous,1,1,1,1.0,0.5,1.0,"[[27], [21], [22], [21], [29]]",83
+pymupdf,structure,mxbai-embed-large,dense,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27, 28], [28], [17], [21], [22]]",78
+pymupdf,structure,mxbai-embed-large,dense,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [27, 28], [17], [21]]",85
+pymupdf,structure,mxbai-embed-large,dense,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [28], [26], [21], [27]]",69
+pymupdf,structure,mxbai-embed-large,dense,MT2,multi_turn,0,1,1,0.5,1.0,1.0,"[[27], [28], [21], [22], [28]]",83
+pymupdf,structure,mxbai-embed-large,dense,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [14], [15], [15], [10]]",68
+pymupdf,structure,mxbai-embed-large,hybrid,R1,program_requirements,0,0,1,0.2,1.0,0.0,"[[5], [9], [9], [5], [10]]",86
+pymupdf,structure,mxbai-embed-large,hybrid,R2,program_requirements,0,1,1,0.333,1.0,1.0,"[[10], [10], [9], [15], [9, 10]]",65
+pymupdf,structure,mxbai-embed-large,hybrid,R3,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [11, 12], [14], [10, 11], [9]]",75
+pymupdf,structure,mxbai-embed-large,hybrid,R4,program_requirements,1,1,1,1.0,0.5,1.0,"[[10, 11], [10], [14], [10], [15]]",115
+pymupdf,structure,mxbai-embed-large,hybrid,R5,program_requirements,1,1,1,1.0,1.0,1.0,"[[10], [9], [13], [1], [5]]",65
+pymupdf,structure,mxbai-embed-large,hybrid,R6,program_requirements,1,1,1,1.0,1.0,0.0,"[[9], [7], [7, 8], [15], [10]]",65
+pymupdf,structure,mxbai-embed-large,hybrid,R7,program_requirements,1,1,1,1.0,0.5,0.5,"[[13], [7, 8], [15], [5], [20]]",93
+pymupdf,structure,mxbai-embed-large,hybrid,R8,program_requirements,1,1,1,1.0,1.0,1.0,"[[12, 13], [9, 10], [9], [10], [14]]",63
+pymupdf,structure,mxbai-embed-large,hybrid,M1,minor,1,1,1,1.0,1.0,1.0,"[[10], [14], [12, 13], [9], [10]]",75
+pymupdf,structure,mxbai-embed-large,hybrid,M2,minor,1,1,1,1.0,1.0,1.0,"[[12, 13], [10], [15], [14], [14]]",80
+pymupdf,structure,mxbai-embed-large,hybrid,C1,course_catalogue,0,1,1,0.5,1.0,1.0,"[[25], [21], [21], [17], [22]]",84
+pymupdf,structure,mxbai-embed-large,hybrid,C2,course_catalogue,1,1,1,1.0,1.0,1.0,"[[21], [26], [17], [28], [21]]",87
+pymupdf,structure,mxbai-embed-large,hybrid,C3,course_catalogue,0,1,1,0.5,1.0,1.0,"[[22], [21], [25], [21], [12]]",74
+pymupdf,structure,mxbai-embed-large,hybrid,C4,course_catalogue,0,0,0,0.0,0.0,0.0,"[[23, 24], [22], [7], [28], [14]]",79
+pymupdf,structure,mxbai-embed-large,hybrid,C5,course_catalogue,1,1,1,1.0,1.0,1.0,"[[29], [13], [22], [18], [9]]",75
+pymupdf,structure,mxbai-embed-large,hybrid,C6,course_catalogue,1,1,1,1.0,1.0,1.0,"[[28], [28], [22], [17], [27]]",92
+pymupdf,structure,mxbai-embed-large,hybrid,C7,course_catalogue,1,1,1,1.0,1.0,1.0,"[[22], [12, 13], [10], [14], [5]]",82
+pymupdf,structure,mxbai-embed-large,hybrid,C8,course_catalogue,0,0,0,0.0,0.0,1.0,"[[14], [9], [10], [7, 8], [19]]",70
+pymupdf,structure,mxbai-embed-large,hybrid,D1,course_content,1,1,1,1.0,1.0,1.0,"[[25], [28], [21], [26], [28]]",102
+pymupdf,structure,mxbai-embed-large,hybrid,D2,course_content,1,1,1,1.0,1.0,1.0,"[[23], [16], [24], [28, 29], [14]]",80
+pymupdf,structure,mxbai-embed-large,hybrid,D3,course_content,1,1,1,1.0,1.0,1.0,"[[26], [27], [28], [22, 23], [10, 11]]",72
+pymupdf,structure,mxbai-embed-large,hybrid,D4,course_content,1,1,1,1.0,1.0,1.0,"[[28, 29], [14], [28], [16], [27]]",85
+pymupdf,structure,mxbai-embed-large,hybrid,D5,course_content,1,1,1,1.0,1.0,1.0,"[[28], [28], [27], [22], [17]]",74
+pymupdf,structure,mxbai-embed-large,hybrid,L1,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [16], [17], [19]]",81
+pymupdf,structure,mxbai-embed-large,hybrid,L2,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[6], [6], [6], [6], [4]]",109
+pymupdf,structure,mxbai-embed-large,hybrid,L3,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[5, 6], [18], [7], [5], [17, 18]]",77
+pymupdf,structure,mxbai-embed-large,hybrid,L4,learning_outcomes,1,1,1,1.0,1.0,1.0,"[[17], [17], [6], [16], [25]]",70
+pymupdf,structure,mxbai-embed-large,hybrid,T1,tracks_careers,1,1,1,1.0,1.0,1.0,"[[5], [5], [7], [15], [15]]",95
+pymupdf,structure,mxbai-embed-large,hybrid,T2,tracks_careers,0,1,1,0.5,1.0,1.0,"[[5], [7], [5], [10], [7]]",78
+pymupdf,structure,mxbai-embed-large,hybrid,T3,tracks_careers,1,1,1,1.0,1.0,0.5,"[[7, 8], [7], [5], [7], [5]]",67
+pymupdf,structure,mxbai-embed-large,hybrid,P1,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [7, 8], [14], [6], [9, 10]]",71
+pymupdf,structure,mxbai-embed-large,hybrid,P2,policies_assessment,1,1,1,1.0,1.0,1.0,"[[19], [18, 19], [19], [25], [20]]",110
+pymupdf,structure,mxbai-embed-large,hybrid,P3,policies_assessment,1,1,1,1.0,1.0,1.0,"[[17, 18], [18], [7, 8], [19], [18]]",67
+pymupdf,structure,mxbai-embed-large,hybrid,F1,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [14], [12, 13], [10], [6]]",75
+pymupdf,structure,mxbai-embed-large,hybrid,F2,flowchart_ocr,1,1,1,1.0,1.0,1.0,"[[14], [10], [15], [15], [6]]",108
+pymupdf,structure,mxbai-embed-large,hybrid,A1,ambiguous,1,1,1,1.0,0.667,1.0,"[[14], [12, 13], [11, 12], [10], [14]]",69
+pymupdf,structure,mxbai-embed-large,hybrid,A2,ambiguous,1,1,1,1.0,1.0,1.0,"[[27], [21], [17], [21], [22]]",72
+pymupdf,structure,mxbai-embed-large,hybrid,A3,ambiguous,1,1,1,1.0,1.0,1.0,"[[27, 28], [21], [17], [22], [28]]",108
+pymupdf,structure,mxbai-embed-large,hybrid,A4,ambiguous,1,1,1,1.0,1.0,1.0,"[[28], [22], [17], [21], [27, 28]]",68
+pymupdf,structure,mxbai-embed-large,hybrid,MT1,multi_turn,1,1,1,1.0,1.0,1.0,"[[25], [21], [28], [21], [26]]",75
+pymupdf,structure,mxbai-embed-large,hybrid,MT2,multi_turn,0,1,1,0.333,1.0,1.0,"[[27], [21], [22], [28], [17]]",122
+pymupdf,structure,mxbai-embed-large,hybrid,MT3,multi_turn,1,1,1,1.0,1.0,1.0,"[[10], [15], [14], [15], [9]]",64

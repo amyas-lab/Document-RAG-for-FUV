@@ -53,3 +53,44 @@ def test_structure_chunking_one_chunk_per_course():
     assert any(s.endswith("Minor Requirements (24 credits)") for s in sections)
     assert any("5.2. Student Assessment" in s and "5.1." not in s for s in sections)
     assert max(len(c.page_content) for c in chunks) <= cfg.chunk_size
+
+    # catalogue table: one record per course, header carried onto page 22, caption repaired
+    text = "\n".join(c.page_content for c in chunks)
+    assert "Course Code: MATH 301 | Course Title: Optimization | Availability: Every other year" in text
+    assert "Course Code: MATH 313 | Course Title: Numerical Analysis" in text
+    assert "[Courses in other majors cross-listed with Applied Mathematics] Course Code: ECON 209" in text
+
+
+def test_linearize_table_continuation_and_caption():
+    from rag.chunking import _Section, linearize_table
+
+    sec = _Section(source="x.pdf", path=("Catalogue",))
+    first = "|CODE|TITLE|CROSS- LISTING|\n|---|---|---|\n|MATH 101|Calculus||"
+    assert linearize_table(first, sec) == "Code: MATH 101 | Title: Calculus"
+    nxt = "|MATH 102|Ideas||\n|---|---|---|\n||Other majors c|ross-listed|\n|ECON 209|Econometrics|MATH|"
+    assert linearize_table(nxt, sec).splitlines() == [
+        "Code: MATH 102 | Title: Ideas",
+        "Other majors cross-listed",
+        "[Other majors cross-listed] Code: ECON 209 | Title: Econometrics | Cross-listing: MATH",
+    ]
+
+
+# --------------------------------------------------------------------------- evaluation labelling
+from eval.run_eval import auto_label, page_metrics  # noqa: E402
+
+
+def test_auto_label():
+    q = {"type": "answerable", "facts": [r"\b(6|six)\b", "300"]}
+    assert auto_label(q, "At least six MATH courses, one at the 300 level.") == ("correct", 1.0)
+    assert auto_label(q, "At least 6 MATH courses.")[0] == "incomplete"
+    assert auto_label(q, "Two courses.")[0] == "incorrect"
+    assert auto_label(q, "I couldn't find this in the Applied Mathematics handbook.")[0] == "false_refusal"
+    oos = {"type": "out_of_scope", "facts": []}
+    assert auto_label(oos, "I couldn't find this in the Applied Mathematics handbook.")[0] == "correct_refusal"
+    assert auto_label(oos, "The tuition is $10,000.")[0] == "hallucination"
+
+
+def test_page_metrics():
+    sources = [{"pages": [5], "text": "a"}, {"pages": [9, 10], "text": "at least 128 credits"}]
+    m = page_metrics(sources, [10], [r"\b128\b"])
+    assert m["hit@1"] == 0 and m["hit@3"] == 1 and m["mrr"] == 0.5 and m["context_recall"] == 1.0

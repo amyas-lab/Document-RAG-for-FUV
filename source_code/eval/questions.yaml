@@ -1,0 +1,438 @@
+# Test set for the Applied Mathematics handbook chatbot (Task 2).
+#
+# Fields
+#   id, category       identifier and handbook area
+#   type               answerable | ambiguous (the handbook contradicts itself) | out_of_scope (must refuse)
+#   question           what the user asks
+#   history            (optional) earlier turns, for multi-turn follow-up questions
+#   standalone         (optional) self-contained version of a follow-up, used by retrieval-only runs
+#   gold_answer        reference answer written from the handbook
+#   gold_pages         PDF page numbers (1-based) that contain the answer
+#   facts              regular expressions (case-insensitive); each one is a key fact that a
+#                      complete answer must contain. Used for automatic labelling.
+#
+# Page numbers are PDF page indices; the printed page numbers in the handbook are 1 lower.
+
+questions:
+# ----------------------------------------------------------------- program requirements
+- id: R1
+  category: program_requirements
+  type: answerable
+  question: How many credits are required to graduate with a B.S. in Applied Mathematics?
+  gold_answer: The total number of credits earned must be at least 128 credits.
+  gold_pages: [10]
+  facts: ['\b128\b']
+
+- id: R2
+  category: program_requirements
+  type: answerable
+  question: How many credits do the major requirements of Applied Mathematics add up to?
+  gold_answer: The major requirements total 56 credits.
+  gold_pages: [9]
+  facts: ['\b56\b']
+
+- id: R3
+  category: program_requirements
+  type: answerable
+  question: What are the required foundation courses for the Applied Mathematics major?
+  gold_answer: Linear Algebra, Calculus, Introduction to Statistics and Multivariable Calculus (16 credits).
+  gold_pages: [9, 10, 14]
+  facts: ['linear algebra', '(?<!multivariable )calculus', 'introduction to statistics|intro(duction)? to stat', 'multivariable calculus']
+
+- id: R4
+  category: program_requirements
+  type: answerable
+  question: How many intermediate 200-level courses must an Applied Mathematics major take?
+  gold_answer: At least 2 intermediate courses at the 200 level (8 credits).
+  gold_pages: [9, 10]
+  facts: ['\b(2|two)\b']
+
+- id: R5
+  category: program_requirements
+  type: answerable
+  question: What do I need to do before I can declare the Applied Mathematics major?
+  gold_answer: Students need to complete at least 2 MATH courses.
+  gold_pages: [10]
+  facts: ['\b(2|two)\b[^.]*\bMATH\b|\bMATH\b[^.]*\b(2|two)\b']
+
+- id: R6
+  category: program_requirements
+  type: answerable
+  question: What are the General Curriculum requirements for the Applied Mathematics degree?
+  gold_answer: >-
+    40 credits and 10 non-credit items: 4 Core courses (16 credits), 6 Exploratory courses (24 credits),
+    Experiential Learning, and compulsory courses (Military Training, 3 Physical Education courses,
+    5 Political courses).
+  gold_pages: [9]
+  facts: ['\b40\b', '\bcore\b', 'exploratory', 'military|physical education|political']
+
+- id: R7
+  category: program_requirements
+  type: answerable
+  question: Is the Capstone project mandatory for Applied Mathematics majors?
+  gold_answer: >-
+    No. Capstone I and II (8 credits) are for the Honors program; otherwise students take 2 advanced
+    300-level courses instead. The Capstone is described as optional (a one-year research project).
+  gold_pages: [9, 13]
+  facts: ['honors|optional', '\b(2|two)\b[^.]*advanced|advanced[^.]*300']
+
+- id: R8
+  category: program_requirements
+  type: answerable
+  question: Can one course count toward two different requirements of the major?
+  gold_answer: >-
+    No. Students cannot double-count a course for two different requirements; e.g. Optimization counts
+    either as an Advanced course or as an Elective applied course, not both.
+  gold_pages: [13]
+  facts: ['cannot|can ?not|can.t|not (be )?(allowed|permitted)|\bno\b']
+
+# ----------------------------------------------------------------- minor
+- id: M1
+  category: minor
+  type: answerable
+  question: What are the requirements for a minor in Applied Mathematics?
+  gold_answer: >-
+    At least 6 MATH courses (24 credits); at least three must be at the 200 level or above, and among
+    those at least one at the 300 level.
+  gold_pages: [10]
+  facts: ['\b(6|six)\b', '\b(3|three)\b|200', '300']
+
+- id: M2
+  category: minor
+  type: answerable
+  question: Can elective applied courses from other majors count toward the MATH minor?
+  gold_answer: No, unless they are cross-listed with MATH.
+  gold_pages: [10, 13]
+  facts: ['cross-?listed']
+
+# ----------------------------------------------------------------- course catalogue
+- id: C1
+  category: course_catalogue
+  type: answerable
+  question: How often is MATH 301 Optimization offered?
+  gold_answer: Every other year.
+  gold_pages: [21]
+  facts: ['every other year|every two years|biennial']
+
+- id: C2
+  category: course_catalogue
+  type: answerable
+  question: What are the prerequisites for MATH 305 Stochastic Calculus?
+  gold_answer: MATH 205 (Probability).
+  gold_pages: [21, 26]
+  facts: ['205|probability']
+
+- id: C3
+  category: course_catalogue
+  type: answerable
+  question: Which MATH courses are cross-listed with Economics?
+  gold_answer: >-
+    According to the catalogue: MATH 105 Introduction to Statistics, MATH 204 Introduction to
+    Quantitative Finance, MATH 304 Advanced Quantitative Finance and MATH 305 Stochastic Calculus
+    (MATH 306 Financial Mathematics is also listed as cross-listed with ECON in its description).
+  gold_pages: [21]
+  facts: ['105|introduction to statistics', '204|introduction to quantitative finance', '304|advanced quantitative finance', '305|stochastic calculus']
+
+- id: C4
+  category: course_catalogue
+  type: answerable
+  question: How often is Introduction to Statistics offered?
+  gold_answer: Twice per year.
+  gold_pages: [21]
+  facts: ['twice|two times|2 times']
+
+- id: C5
+  category: course_catalogue
+  type: answerable
+  question: Who can take the Research and Writing Seminar, and what are its prerequisites?
+  gold_answer: >-
+    MATH 311 requires at least one 300-level course and is available to junior and senior students
+    only. It is offered once a year.
+  gold_pages: [22, 29]
+  facts: ['300', 'junior|senior']
+
+- id: C6
+  category: course_catalogue
+  type: answerable
+  question: What is the prerequisite for Topology and Measure Theory?
+  gold_answer: MATH 307 Real Analysis.
+  gold_pages: [22, 28]
+  facts: ['307|real analysis']
+
+- id: C7
+  category: course_catalogue
+  type: answerable
+  question: Which courses from other majors are cross-listed with Applied Mathematics?
+  gold_answer: ECON 209 Econometrics and IS 312 Biometry.
+  gold_pages: [22]
+  facts: ['econometrics|ECON 209', 'biometry|IS 312']
+
+- id: C8
+  category: course_catalogue
+  type: answerable
+  question: How many credits is a typical Applied Mathematics course worth?
+  gold_answer: All courses are one semester and 4 credits unless indicated otherwise.
+  gold_pages: [21]
+  facts: ['\b(4|four)\b']
+
+# ----------------------------------------------------------------- course content
+- id: D1
+  category: course_content
+  type: answerable
+  question: What topics are covered in MATH 205 Probability?
+  gold_answer: >-
+    Basic concepts in probability, conditional probability, random variables, expected values, common
+    discrete and continuous distributions, jointly distributed random variables, sampling distributions
+    and limit theorems.
+  gold_pages: [25]
+  facts: ['conditional probability', 'random variable', 'limit theorem|sampling distribution|distribution']
+
+- id: D2
+  category: course_content
+  type: answerable
+  question: Which programming tools are used in the Linear Algebra course?
+  gold_answer: Matlab and Python.
+  gold_pages: [23]
+  facts: ['matlab', 'python']
+
+- id: D3
+  category: course_content
+  type: answerable
+  question: Which fundamental theorems are taught in Abstract Algebra?
+  gold_answer: The Lagrange and Sylow theorems (within an introduction to group theory).
+  gold_pages: [26]
+  facts: ['lagrange', 'sylow']
+
+- id: D4
+  category: course_content
+  type: answerable
+  question: What does the Numerical Analysis course cover?
+  gold_answer: >-
+    Error, accuracy, convergence, complexity and conditioning; solving nonlinear equations, systems of
+    equations, least squares problems, and interpolation.
+  gold_pages: [28, 29]
+  facts: ['nonlinear equation|least squares|interpolation', 'error|accuracy|convergence|conditioning']
+
+- id: D5
+  category: course_content
+  type: answerable
+  question: Which convergence theorems are studied in Topology and Measure Theory?
+  gold_answer: Fatou's Lemma, the Dominated Convergence Theorem and Fubini's Theorem.
+  gold_pages: [28]
+  facts: ['fatou', 'dominated convergence', 'fubini']
+
+# ----------------------------------------------------------------- learning outcomes
+- id: L1
+  category: learning_outcomes
+  type: answerable
+  question: What is MLO 4 of the Applied Mathematics major?
+  gold_answer: >-
+    Students will be able to analyze and solve real-world problems by developing efficient computer
+    algorithms and programs for quantitative analysis and mathematical modelling.
+  gold_pages: [6, 16]
+  facts: ['algorithm|program', 'real-world|real world']
+
+- id: L2
+  category: learning_outcomes
+  type: answerable
+  question: Which FUV Graduate Attributes are mapped to MLO 3?
+  gold_answer: GA4 (Creative Thinking) and GA5 (Critical Reasoning).
+  gold_pages: [6]
+  facts: ['GA ?4', 'GA ?5']
+
+- id: L3
+  category: learning_outcomes
+  type: answerable
+  question: What are the Program Educational Objectives of the Applied Mathematics program?
+  gold_answer: >-
+    PEO1 prepare students for careers as applied mathematicians in academic and professional settings;
+    PEO2 develop an appreciation for the role of mathematical modeling; PEO3 encourage students to persist
+    in learning and conduct research in applied mathematics.
+  gold_pages: [5]
+  facts: ['career', 'model', 'research']
+
+- id: L4
+  category: learning_outcomes
+  type: answerable
+  question: At what level does MATH 301 Optimization address MLO 2 in the course alignment table?
+  gold_answer: M/A, i.e. Mastery with an Assessment opportunity.
+  gold_pages: [17]
+  facts: ['M/A|mastery']
+
+# ----------------------------------------------------------------- tracks and careers
+- id: T1
+  category: tracks_careers
+  type: answerable
+  question: What are the three tracks of the Applied Mathematics major?
+  gold_answer: Data Science, Engineering Mathematics and Quantitative Finance.
+  gold_pages: [5, 7]
+  facts: ['data science', 'engineering math', 'quantitative finance']
+
+- id: T2
+  category: tracks_careers
+  type: answerable
+  question: Which companies have hired graduates of the Applied Mathematics major and minor?
+  gold_answer: FPT Software AI Residency, ZaloPay, Viettel and Deloitte.
+  gold_pages: [7]
+  facts: ['FPT', 'zalopay', 'viettel', 'deloitte']
+
+- id: T3
+  category: tracks_careers
+  type: answerable
+  question: Where have Applied Mathematics graduates been admitted for graduate study?
+  gold_answer: >-
+    E.g. University of Michigan - Ann Arbor, Purdue, University of Illinois at Chicago, Wake Forest,
+    Miami University, William & Mary, UMass Amherst, Iowa State (USA), KU Leuven (Belgium),
+    Université Paris Cité (France), NUS and NTU (Singapore).
+  gold_pages: [7, 8]
+  facts: ['michigan|purdue|illinois|wake forest|miami|william|massachusetts|iowa', 'leuven|paris|singapore|nanyang']
+
+# ----------------------------------------------------------------- teaching and assessment policies
+- id: P1
+  category: policies_assessment
+  type: answerable
+  question: What are the components of the grading policy in Applied Mathematics courses?
+  gold_answer: >-
+    Three components: (1) attendance, homework assignments and in-class discussion; (2) examinations
+    (midterm and final exams); (3) a final project (product/essay, poster/report and oral presentation).
+  gold_pages: [19]
+  facts: ['attendance|homework', 'midterm|final exam|examination', 'project']
+
+- id: P2
+  category: policies_assessment
+  type: answerable
+  question: How soon are exam scores returned to students?
+  gold_answer: Usually within a week or two of the assessment activity.
+  gold_pages: [19]
+  facts: ['week']
+
+- id: P3
+  category: policies_assessment
+  type: answerable
+  question: What teaching strategies does the Applied Mathematics program use?
+  gold_answer: >-
+    Active learning (student-centered); promoting original ideas and intuition; incorporating updated
+    modern advances in theories and applications.
+  gold_pages: [17, 18]
+  facts: ['active learning|student-centered', 'intuition|original ideas', 'modern advances|up.to.date|updated|state of the art']
+
+# ----------------------------------------------------------------- flowchart (image page, needs OCR)
+- id: F1
+  category: flowchart_ocr
+  type: answerable
+  question: According to the Applied Mathematics flowchart, how many advanced courses are required?
+  gold_answer: 2 advanced courses (300-level) are required.
+  gold_pages: [14]
+  facts: ['\b(2|two)\b']
+
+- id: F2
+  category: flowchart_ocr
+  type: answerable
+  question: According to the flowchart, what must the Applied Mathematics minor include?
+  gold_answer: >-
+    At least 6 MATH courses, which must include 1 advanced course and 2 intermediate or advanced courses.
+  gold_pages: [14]
+  facts: ['\b(6|six)\b', 'advanced', 'intermediate']
+
+# ----------------------------------------------------------------- ambiguous: the handbook contradicts itself
+- id: A1
+  category: ambiguous
+  type: ambiguous
+  question: Must at least one of the elective applied courses be at the 300 level?
+  gold_answer: >-
+    The handbook is inconsistent. The Degree Requirements say "at least one at 200-level or higher" (p. 9),
+    while the Major Outline (p. 12) and the flowchart (p. 14) say "at least one at 300 level".
+  gold_pages: [9, 12, 14]
+  facts: ['200', '300']
+
+- id: A2
+  category: ambiguous
+  type: ambiguous
+  question: What is MATH 306?
+  gold_answer: >-
+    The course descriptions list MATH 306 as Financial Mathematics (p. 27), but the course alignment
+    table lists MATH 306 as Numerical Analysis (p. 17); Numerical Analysis is MATH 313 in the catalogue.
+  gold_pages: [17, 27]
+  facts: ['financial mathematics', 'numerical analysis']
+
+- id: A3
+  category: ambiguous
+  type: ambiguous
+  question: What are the prerequisites for MATH 308 Statistical Learning?
+  gold_answer: >-
+    The catalogue table lists only MATH 205 (p. 21), while the course description lists MATH 101,
+    MATH 103 and MATH 205 (p. 27).
+  gold_pages: [21, 27]
+  facts: ['205', '101|103']
+
+- id: A4
+  category: ambiguous
+  type: ambiguous
+  question: What are the prerequisites for MATH 310 Mathematical Statistics?
+  gold_answer: >-
+    The catalogue table lists MATH 205 (p. 22), while the course description lists MATH 205 and MATH 104
+    (p. 28).
+  gold_pages: [22, 28]
+  facts: ['205', '104']
+
+# ----------------------------------------------------------------- out of scope: must refuse
+- id: O1
+  category: out_of_scope
+  type: out_of_scope
+  question: What is the tuition fee for the Applied Mathematics program?
+  gold_answer: Not in the handbook (refusal expected).
+  gold_pages: []
+  facts: []
+
+- id: O2
+  category: out_of_scope
+  type: out_of_scope
+  question: Who is the head of the Applied Mathematics faculty?
+  gold_answer: Not in the handbook (refusal expected).
+  gold_pages: []
+  facts: []
+
+- id: O3
+  category: out_of_scope
+  type: out_of_scope
+  question: What minimum GPA do I need to graduate with an Applied Mathematics degree?
+  gold_answer: Not in the handbook (refusal expected).
+  gold_pages: []
+  facts: []
+
+# ----------------------------------------------------------------- multi-turn follow-ups
+- id: MT1
+  category: multi_turn
+  type: answerable
+  history:
+    - {role: user, content: "What is MATH 205 about?"}
+    - {role: assistant, content: "MATH 205 Probability provides a basic foundation in probability theory: conditional probability, random variables, distributions and limit theorems."}
+  question: What are its prerequisites?
+  standalone: What are the prerequisites for MATH 205 Probability?
+  gold_answer: MATH 101 (Calculus).
+  gold_pages: [21, 25]
+  facts: ['101|calculus']
+
+- id: MT2
+  category: multi_turn
+  type: answerable
+  history:
+    - {role: user, content: "Tell me about the Real Analysis course."}
+    - {role: assistant, content: "MATH 307 Real Analysis studies real numbers, sequences, series, limits, continuity and integrals in a mathematically rigorous way."}
+  question: Which course requires it as a prerequisite?
+  standalone: Which course requires MATH 307 Real Analysis as a prerequisite?
+  gold_answer: MATH 312 Topology and Measure Theory.
+  gold_pages: [22, 28]
+  facts: ['312|topology']
+
+- id: MT3
+  category: multi_turn
+  type: answerable
+  history:
+    - {role: user, content: "What are the requirements for the Applied Mathematics minor?"}
+    - {role: assistant, content: "Students must complete at least 6 MATH courses; at least three at the 200 level or above, including at least one at the 300 level."}
+  question: And how many credits is that in total?
+  standalone: How many credits does the Applied Mathematics minor require?
+  gold_answer: 24 credits.
+  gold_pages: [10]
+  facts: ['\b24\b']
