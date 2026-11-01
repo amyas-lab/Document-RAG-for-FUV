@@ -26,6 +26,7 @@ class Config:
     chunking: str = "structure"
     chunk_size: int = 1200
     chunk_overlap: int = 150
+    table_rows: int = 6
 
     ollama_url: str = "http://127.0.0.1:11434"
     embed_model: str = "nomic-embed-text"

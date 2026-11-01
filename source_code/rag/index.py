@@ -21,7 +21,7 @@ from langchain_ollama import OllamaEmbeddings
 from langchain_qdrant import FastEmbedSparse, QdrantVectorStore, RetrievalMode
 from qdrant_client import QdrantClient, models
 
-from .chunking import chunk_documents
+from .chunking import CHUNKER_VERSION, chunk_documents
 from .config import Config
 from .loaders import file_sha256, find_documents, load_documents
 
@@ -92,7 +92,8 @@ def corpus_hash(cfg: Config) -> str:
     state = {
         "files": [(p.name, file_sha256(p)) for p in find_documents(cfg.data_path)],
         "settings": [cfg.pdf_parser, cfg.ocr_enabled, cfg.ocr_dpi, cfg.ocr_min_chars,
-                     cfg.chunking, cfg.chunk_size, cfg.chunk_overlap, cfg.embed_model],
+                     cfg.chunking, cfg.chunk_size, cfg.chunk_overlap, cfg.table_rows, cfg.embed_model,
+                     CHUNKER_VERSION],
     }
     return hashlib.sha256(json.dumps(state, sort_keys=True).encode()).hexdigest()[:16]
 

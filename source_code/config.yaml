@@ -16,6 +16,7 @@ ocr_min_chars: 50                 # a page with fewer extractable characters is 
 chunking: structure               # fixed (baseline recursive splitter) | structure (heading-aware)
 chunk_size: 1200                  # max characters per chunk
 chunk_overlap: 150                # used by the fixed splitter / hard splits
+table_rows: 6                     # structure chunking: max table records per chunk
 
 # --- Models (served by Ollama) ---
 ollama_url: http://127.0.0.1:11434

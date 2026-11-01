@@ -5,9 +5,16 @@
 * ``structure`` - heading-aware: the Markdown produced by pymupdf4llm is split into sections
                   (e.g. "4. Program Structure and Curriculum > Minor Requirements (24 credits)"),
                   each course description becomes its own chunk, tables are never cut in the
-                  middle of a row (long tables are split by rows with the header repeated), and
-                  the section path is prepended to the chunk text so that the embedding "knows"
-                  where the text comes from.
+                  middle of a row, and the section path is prepended to the chunk text so that
+                  the embedding "knows" where the text comes from.
+
+Tables (structure chunking) are linearised into one self-contained record per row
+("Course Code: MATH 301 | Course Title: Optimization | Availability: Every other year | ...")
+and packed into chunks of at most ``table_rows`` records. This fixes three problems seen in
+evaluation round 1: a 16-row catalogue table in one chunk gave a diluted embedding, a table
+continued on the next page lost its header row, and caption rows that the PDF parser broke
+across cells ("Courses in other majors c|ross-listed with Ap|plied Mathematics") were invisible
+to BM25.
 """
 
 from __future__ import annotations
@@ -19,6 +26,8 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from .config import Config
+
+CHUNKER_VERSION = 2   # bump when chunk output changes -> triggers re-indexing
 
 COURSE_CODE = re.compile(r"\b(MATH|CS|ECON|IS)\s*(\d{3})\b")
 _MD_HEADING = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
@@ -65,6 +74,60 @@ class _Section:
     source: str
     path: tuple[str, ...]
     blocks: list[_Block] = field(default_factory=list)
+    table_header: list[str] | None = None   # carried over when a table continues on the next page
+
+
+_TABLE_RULE = re.compile(r"^\|?\s*:?-{3,}")
+
+
+def _cells(row: str) -> list[str]:
+    row = row.strip()
+    row = row[1:] if row.startswith("|") else row      # remove only the outer pipes so that
+    row = row[:-1] if row.endswith("|") else row       # empty first/last cells are kept
+    return [c.strip() for c in row.split("|")]
+
+
+def _clean_header(cell: str) -> str:
+    cell = re.sub(r"-\s+", "-", cell).strip()          # "CROSS- LISTING" -> "CROSS-LISTING"
+    return " ".join(w.capitalize() if w.replace("-", "").isalpha() and w.isupper() and len(w) > 3 else w
+                    for w in cell.split())               # "COURSE CODE" -> "Course Code", "MLO1" kept
+
+
+def linearize_table(text: str, section: _Section) -> str:
+    """Markdown table -> one 'Header: value | Header: value' record per line.
+
+    * the row before the |---| rule is the header, unless the section already had a table with
+      the same number of columns and a different header (= continuation on a new page);
+    * a row with an empty first cell and the rest of its text split over several cells is a
+      caption that the parser broke apart; its cells are re-joined and it prefixes the following
+      records."""
+    rows = [r for r in text.splitlines() if r.strip()]
+    body_rows = [r for r in rows if not _TABLE_RULE.match(r.strip().strip("|").strip())]
+    if not body_rows:
+        return text
+    first = _cells(body_rows[0])
+    prev = section.table_header
+    if prev and len(prev) == len(first) and [_clean_header(c) for c in first] != prev:
+        header, data = prev, body_rows                  # continuation: first row is data
+    else:
+        header, data = [_clean_header(c) for c in first], body_rows[1:]
+    section.table_header = header
+
+    records, caption = [], ""
+    for row in data:
+        cells = _cells(row)
+        filled = [c for c in cells if c]
+        if not filled:
+            continue
+        broken = any(a[-1:].islower() and b[:1].islower() for a, b in zip(filled, filled[1:]))
+        if not cells[0] and len(filled) >= 2 and broken:
+            caption = "".join(filled)                    # broken-up caption row
+            records.append(caption)
+            continue
+        fields = [f"{h}: {c}" if h else c for h, c in zip(header, cells) if c]
+        fields += [c for c in cells[len(header):] if c]
+        records.append((f"[{caption}] " if caption else "") + " | ".join(fields))
+    return "\n".join(records)
 
 
 def _detect_heading(line: str, toc: set[str]) -> tuple[int, str] | None:
@@ -118,6 +181,8 @@ def _build_sections(pages: list[Document]) -> list[_Section]:
         def flush():
             nonlocal para, para_is_table
             text = "\n".join(para).strip()
+            if text and para_is_table:
+                text = linearize_table(text, current)
             if text:
                 current.blocks.append(_Block(text, page, ocr, para_is_table))
             para, para_is_table = [], False
@@ -147,24 +212,24 @@ def _build_sections(pages: list[Document]) -> list[_Section]:
     return [s for s in sections if s.blocks]
 
 
-def _split_table(block: _Block, limit: int) -> list[_Block]:
-    rows = block.text.splitlines()
-    header, body = rows[:2], rows[2:]
-    out, cur = [], list(header)
-    for row in body:
-        if len("\n".join(cur + [row])) > limit and len(cur) > len(header):
+def _split_table(block: _Block, limit: int, max_rows: int) -> list[_Block]:
+    """Split linearised table records into groups (records are self-contained, so no header)."""
+    out, cur = [], []
+    for row in block.text.splitlines():
+        if cur and (len(cur) >= max_rows or len("\n".join(cur + [row])) > limit):
             out.append(_Block("\n".join(cur), block.page, block.ocr, True))
-            cur = list(header)
+            cur = []
         cur.append(row)
-    out.append(_Block("\n".join(cur), block.page, block.ocr, True))
+    if cur:
+        out.append(_Block("\n".join(cur), block.page, block.ocr, True))
     return out
 
 
 def _split_long(block: _Block, cfg: Config, limit: int) -> list[_Block]:
+    if block.is_table:
+        return _split_table(block, limit, cfg.table_rows)
     if len(block.text) <= limit:
         return [block]
-    if block.is_table:
-        return _split_table(block, limit)
     splitter = RecursiveCharacterTextSplitter(chunk_size=limit, chunk_overlap=cfg.chunk_overlap)
     return [_Block(t, block.page, block.ocr, False) for t in splitter.split_text(block.text)]
 
@@ -203,6 +268,12 @@ def structure_chunks(pages: list[Document], cfg: Config) -> list[Document]:
 
         size = 0
         for b in blocks:
+            if b.is_table:                  # table record groups are always chunks of their own
+                emit()
+                group, size = [b], 0
+                emit()
+                group = []
+                continue
             if group and size + len(b.text) + 2 > limit:
                 emit()
                 group, size = [], 0
