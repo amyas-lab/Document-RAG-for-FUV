@@ -8,7 +8,7 @@ Four services, started in dependency order by `docker compose`:
 | `ollama-init` | `ollama/ollama:0.40.13` | – | One-shot job: pulls `LLM_MODEL` and `EMBED_MODEL`, then exits |
 | `qdrant` | `qdrant/qdrant:v1.20.0` | 6333 | Vector database (hybrid dense + BM25), dashboard at `/dashboard` |
 | `api` | built from `Dockerfile.api` | 8000 | FastAPI backend, Swagger UI at `/docs`. Builds the index on start |
-| `ui` | built from `Dockerfile.ui` | 8501 | Streamlit chat client |
+| `ui` | built from `Dockerfile.ui` (`nginx:1.31.8-alpine`) | 8080 | Static web UI; proxies `/api/*` to the API |
 
 ```
 ollama ──healthy──► ollama-init ──completed──┐
@@ -32,7 +32,7 @@ docker compose up --build -d        # first run: about 5-10 min (image build + m
 docker compose logs -f ollama-init api   # watch model pulls and indexing
 ```
 
-Open the UI at <http://localhost:8501>, the API docs at <http://localhost:8000/docs> and the
+Open the UI at <http://localhost:8080>, the API docs at <http://localhost:8000/docs> and the
 Qdrant dashboard at <http://localhost:6333/dashboard>.
 
 > **Apple Silicon note.** Containers cannot use the Metal GPU, so generation runs on CPU
@@ -101,4 +101,4 @@ docker image rm fuv-math-rag-api fuv-math-rag-ui
 | `ollama-init` fails to pull | Check internet access; re-run with `docker compose up ollama-init` |
 | `model "…" not found` in answers | The UI picked a model that is not pulled; add it to `EXTRA_MODELS` |
 | Host mode: `Connection refused` to Ollama | Ollama is not running on the host, or on Linux it is bound to 127.0.0.1 only |
-| Port already in use | Stop the local `uvicorn`/`streamlit`/`ollama`, or change the left side of `ports:` |
+| Port already in use | Stop the local `uvicorn`/`ollama`, or change the left side of `ports:` |

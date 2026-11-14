@@ -5,10 +5,10 @@
 > Fulbright University Vietnam **B.S. Applied Mathematics Major Handbook** (v1.0, Sep 2025),
 > packaged with Docker and served through a web UI.
 
-**Status:** 🚧 In progress. ✅ Task 1 (PDF support, OCR, Qdrant hybrid index, CLI) · ✅ Task 2 (evaluation, see [`source_code/eval/analysis.md`](source_code/eval/analysis.md)) · ✅ Task 4 (FastAPI + Streamlit) · 🔧 Task 3 (Docker) · ⏳ Tasks 5–7.
+**Status:** 🚧 In progress. ✅ Task 1 (PDF support, OCR, Qdrant hybrid index, CLI) · ✅ Task 2 (evaluation, see [`source_code/eval/analysis.md`](source_code/eval/analysis.md)) · ✅ Task 3 (Docker) · ✅ Task 4 (FastAPI + web UI) · ⏳ Tasks 5–7.
 
 **Stack at a glance:** PyMuPDF/pypdf + Tesseract OCR → structure-aware chunking → Ollama embeddings →
-**Qdrant** (hybrid dense + BM25) → Ollama LLM → **FastAPI** backend → **Streamlit** chat UI,
+**Qdrant** (hybrid dense + BM25) → Ollama LLM → **FastAPI** backend → **web UI** (static HTML/CSS/JS served by nginx),
 all orchestrated with **Docker Compose** (fully containerised, or with a host-Ollama override).
 
 ---
@@ -150,8 +150,8 @@ exported from Word, with a selectable text layer (tagged PDF).
 - **F3.4** Configuration via `.env` (`LLM_MODEL`, `EMBED_MODEL`, `OLLAMA_URL`, `TOP_K`, …). `.env.example` is committed.
 - **F3.5** An init step pulls the required Ollama models on first start (`ollama pull`), then builds the index if it is missing.
 - **F3.6** `docker/README.md` documents the full build → run → test → stop → clean-up sequence for macOS and Linux.
-- **F3.7** Services and ports: `ollama` :11434, `qdrant` :6333 (REST + dashboard at `/dashboard`), `api` :8000 (Swagger at `/docs`), `ui` :8501. Startup order is enforced with `depends_on: condition: service_healthy`.
-- **Acceptance:** on a clean machine with only Docker installed, `docker compose up` gives a working chatbot at `http://localhost:8501`, the API at `http://localhost:8000/docs` and the Qdrant dashboard at `http://localhost:6333/dashboard`.
+- **F3.7** Services and ports: `ollama` :11434, `qdrant` :6333 (REST + dashboard at `/dashboard`), `api` :8000 (Swagger at `/docs`), `ui` :8080 (nginx, proxies `/api`). Startup order is enforced with `depends_on: condition: service_healthy`.
+- **Acceptance:** on a clean machine with only Docker installed, `docker compose up` gives a working chatbot at `http://localhost:8080`, the API at `http://localhost:8000/docs` and the Qdrant dashboard at `http://localhost:6333/dashboard`.
 
 ### Task 4 — Web UI
 - **F4.1** Chat interface: question input, Markdown-rendered answers, streaming tokens.
@@ -160,7 +160,8 @@ exported from Word, with a selectable text layer (tagged PDF).
 - **F4.4** Sidebar settings: LLM model selector (from installed Ollama models), top-K, temperature, strict / fallback mode.
 - **F4.5** Status indicators: Ollama reachable, index size (number of chunks), response latency.
 - **F4.6** Example-question chips for first-time users.
-- **F4.7** (Optional, useful for the Task 1 demo) Upload a PDF → index it into a temporary collection.
+- **F4.7** (Optional, useful for the Task 1 demo) Upload a PDF → index it into a temporary collection. *(not implemented)*
+- **F4.8** Clicking a page citation highlights the passage and shows the rendered handbook page next to the answer.
 - **Acceptance:** screenshots of a multi-turn conversation with sources, the settings panel, and the "not found" behaviour.
 
 ### Task 5 — Report (PDF, ≥ 1,500 words)
@@ -254,6 +255,8 @@ OCR is only needed for **page 14 (flowchart)**. Choices: (a) Tesseract OCR via `
 
 **Decision: FastAPI (backend) + Streamlit (frontend).**
 
+**Revised (2026-11-14): FastAPI + a static web UI.** Streamlit was implemented first and worked, but its layout could not show an answer and its evidence side by side, or open the cited handbook page. The replacement is plain HTML/CSS/JS with no build step. Fonts are bundled (IBM Plex), so it works offline. In Docker it is served by nginx, which also proxies `/api` to FastAPI. The REST contract did not change.
+
 API contract (`api/main.py`):
 | Method | Path | Body / Response |
 |---|---|---|
@@ -263,7 +266,7 @@ API contract (`api/main.py`):
 | `POST` | `/chat/stream` | Same body. Server-Sent Events: one `sources` event, then `token` events, then `done` (full result) or `error` |
 | `POST` | `/index` | Re-index `data/documents` (or an uploaded PDF into a named collection) |
 
-The Streamlit app (`ui/app.py`) is a pure client. It keeps the chat history in `st.session_state` and talks to the API only through `API_URL`.
+The web UI (`web/`) is a pure client. It keeps the chat history in memory, and it talks to the API only through relative `/api/...` URLs, or through same-origin URLs when FastAPI serves it at `/ui/` in local development. Two read-only endpoints support the evidence panel: `GET /documents` (files and page counts) and `GET /documents/{name}/pages/{n}.png` (a page rendered with PyMuPDF).
 
 ### 6.5 Docker topology — ✅ DECIDED: option C (full stack + host-Ollama override)
 
@@ -322,7 +325,7 @@ Document-RAG-for-FUV/
 ├── source_code/
 │   ├── rag/                      # core package (config, loaders, ocr, chunking, index, retriever, prompts, chain, cli)
 │   ├── api/                      # FastAPI app (REST + SSE streaming)
-│   ├── ui/                       # Streamlit chat client
+│   ├── web/                      # static web UI (HTML/CSS/JS, bundled IBM Plex fonts)
 │   ├── eval/                     # questions.yaml, run_eval.py, results/, analysis notebook
 │   ├── data/documents/           # MATH_MajorHandbook.pdf (+ test PDF for Task 1)
 │   ├── config.yaml
@@ -330,7 +333,8 @@ Document-RAG-for-FUV/
 │   └── tests/                    # unit tests: loader, chunker, retriever smoke test
 ├── docker/
 │   ├── Dockerfile.api            # FastAPI + RAG core + Tesseract
-│   ├── Dockerfile.ui             # Streamlit client (slim, no ML deps)
+│   ├── Dockerfile.ui             # nginx serving web/ + /api reverse proxy
+│   ├── nginx.conf
 │   ├── docker-compose.yml        # ollama + ollama-init + qdrant + api + ui
 │   ├── docker-compose.host-ollama.yml  # override: use Ollama on the host (Metal GPU)
 │   ├── ollama-init.sh            # pulls models on first start
@@ -362,9 +366,8 @@ cd source_code
 python -m rag.cli index --reindex
 python -m rag.cli ask -q "What are the prerequisites for MATH 305?"
 
-# 4. API + UI (two terminals)
-uvicorn api.main:app --port 8000   # http://localhost:8000/docs
-streamlit run ui/app.py            # http://localhost:8501
+# 4. API + web UI (one process)
+uvicorn api.main:app --port 8000   # API docs: http://localhost:8000/docs, UI: http://localhost:8000/ui/
 
 # 5. Evaluation
 python -m eval.run_eval --config eval/grid.yaml
@@ -386,7 +389,7 @@ docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up --buil
 | D1 | Handbook | **B.S. Applied Mathematics** | Chosen by the author | 2026-11-01 |
 | D2 | Vector DB | **Qdrant** (server in Docker, embedded locally), hybrid dense + BM25 | Exact course-code matching, dashboard, real multi-service deployment | 2026-11-01 |
 | D3 | PDF parser / OCR | **pypdf** (baseline) + **pymupdf4llm** (improved), switch `PDF_PARSER`; **Tesseract** OCR for pages with no text layer | Comparable in the report; recovers the page-14 flowchart | 2026-11-01 |
-| D4 | UI architecture | **FastAPI + Streamlit** | Clear backend integration; reusable API | 2026-11-01 |
+| D4 | UI architecture | **FastAPI + static web UI (nginx)**, replacing the first Streamlit version | Answer and evidence side by side, cited page viewer, offline fonts; same API | 2026-11-14 |
 | D5 | Docker topology | Full stack by default + **host-Ollama override file** for Metal GPU on Mac | Reproducible and fast for the demo | 2026-11-01 |
 | D6 | Default LLM / embedding | `qwen2.5:3b` / `nomic-embed-text` (`qwen2.5:1.5b` recommended for CPU-only Docker) | Evaluation: 1.5B ≈ 3B quality at 2× speed; 0.5B hallucinates; mxbai only helps with pypdf | 2026-11-01 |
 | D7 | Prompt mode | Strict grounding + citations (baseline fallback kept as an experiment) | Same score as fallback (0.73 vs 0.76), but it fails by refusing rather than guessing | 2026-11-01 |

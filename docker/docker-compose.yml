@@ -1,6 +1,6 @@
-# Fully containerised stack: Ollama + Qdrant + FastAPI + Streamlit.
+# Fully containerised stack: Ollama + Qdrant + FastAPI + web UI (nginx).
 #
-#   cd docker && docker compose up --build            # http://localhost:8501
+#   cd docker && docker compose up --build            # http://localhost:8080
 #
 # Apple Silicon: Docker cannot use the Metal GPU, so generation in the `ollama` container runs on
 # CPU. For GPU speed, run Ollama on the host instead (see docker-compose.host-ollama.yml):
@@ -69,14 +69,14 @@ services:
       ollama-init: {condition: service_completed_successfully, required: false}
     restart: unless-stopped
 
-  ui:
+  ui:                                # nginx: static web UI + /api reverse proxy
     build:
       context: ../source_code
       dockerfile: ../docker/Dockerfile.ui
+      additional_contexts:
+        conf: .                        # docker/ (nginx.conf)
     image: fuv-math-rag-ui:latest
-    ports: ["8501:8501"]
-    environment:
-      API_URL: http://api:8000
+    ports: ["8080:8080"]
     depends_on:
       api: {condition: service_healthy}
     restart: unless-stopped
