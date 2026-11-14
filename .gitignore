@@ -24,3 +24,6 @@ source_code/data/extracted/
 # Large media (videos are linked from demo_video/links.md)
 *.mp4
 *.mov
+
+# Assignment material (course PDFs and sample code): kept locally, not part of the repository
+final-project/

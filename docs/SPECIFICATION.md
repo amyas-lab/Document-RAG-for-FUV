@@ -355,7 +355,7 @@ Document-RAG-for-FUV/
 ├── report/                       # report source + report.pdf
 ├── demo_video/                   # links.md (videos hosted on Drive if they are too large)
 ├── docs/screenshots/             # UI screenshots for README and report
-└── final-project/                # original assignment material (reference only)
+└── final-project/                # assignment material (local only, gitignored)
 ```
 
 ---
