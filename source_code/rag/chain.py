@@ -15,6 +15,9 @@ from .index import get_store
 
 log = logging.getLogger(__name__)
 
+FOLLOWUP_EXTRA_K = 3          # extra passages retrieved for follow-up questions
+FOLLOWUP_HISTORY_TURNS = 2    # user/assistant exchanges shown to the LLM for follow-ups
+
 
 class RAGPipeline:
     def __init__(self, cfg: Config):
@@ -56,20 +59,28 @@ class RAGPipeline:
         rewritten = self.llm(model, temperature=0).invoke(messages).content.strip().strip('"')
         return rewritten or question
 
-    def build_messages(self, question: str, sources: list[dict], mode: str):
+    def build_messages(self, question: str, sources: list[dict], mode: str,
+                       history: list[dict] | None = None, original: str | None = None):
         context = prompts.format_context(sources)
         if mode == "fallback":
             return [HumanMessage(prompts.FALLBACK_TEMPLATE.format(context=context, question=question))]
-        return [SystemMessage(prompts.STRICT_SYSTEM),
-                HumanMessage(prompts.STRICT_USER.format(context=context, question=question))]
+        if history:
+            user = prompts.STRICT_USER_FOLLOWUP.format(
+                history=prompts.format_history(history, max_turns=FOLLOWUP_HISTORY_TURNS),
+                context=context, original=original or question, question=question)
+        else:
+            user = prompts.STRICT_USER.format(context=context, question=question)
+        return [SystemMessage(prompts.STRICT_SYSTEM), HumanMessage(user)]
 
     # ------------------------------------------------------------------ API
     def _prepare(self, question, history, model, top_k, mode):
         t0 = time.perf_counter()
         query = self.standalone_query(question, history, model)
-        sources = self.retrieve(query, top_k)
+        k = top_k or self.cfg.top_k
+        # A follow-up usually asks for more than the previous answer gave: widen the evidence.
+        sources = self.retrieve(query, k + FOLLOWUP_EXTRA_K if history else k)
         t1 = time.perf_counter()
-        messages = self.build_messages(query, sources, mode or self.cfg.prompt_mode)
+        messages = self.build_messages(query, sources, mode or self.cfg.prompt_mode, history, question)
         return query, sources, messages, t0, t1
 
     def answer(self, question: str, history: list[dict] | None = None, *, model: str | None = None,

@@ -202,3 +202,23 @@ All 3B and 1.5B runs refuse all 3 out-of-scope questions. qwen2.5:0.5b invents a
   rounds 1 and 2, R3 and MT2 changed label with no change in retrieval.
 - Labels are regex-based plus one reviewer. The model-comparison runs were not manually reviewed.
 - Latency was measured with Ollama on the Apple M2 GPU. CPU-only Docker is about 2.5–3× slower (38 s vs 14 s for one qwen2.5:3b answer).
+
+## 7. Change after the evaluation: follow-up questions
+
+Found while testing the web UI. In the conversation "What are the requirements for a minor?" → "What are
+those courses exactly?" → "Can you list them out?", the bot repeated the same rule three times. There were two causes:
+
+1. The generation prompt only contained the rewritten question, not the conversation, so the model did not
+   know the user had already read that rule.
+2. The rewritten query is dominated by "minor", so it retrieved the same 5 passages every time, although the
+   handbook names courses by level elsewhere (pp. 10–13).
+
+Fix (`rag/chain.py`, `rag/prompts.py`):
+- For follow-ups, the last 2 exchanges and the original wording are added to the prompt, with an instruction
+  to give only the new information.
+- 3 extra passages are retrieved (8 instead of 5).
+
+Result: the second and third turns now list specific courses (Optimization, Statistical Learning, Numerical
+Analysis, …) instead of restating the rule. The model still overstates them as "required" rather than examples,
+a small-model limitation. On the test set, MT1–MT3 give the same labels as before (MT1 and MT3 correct, MT2 still
+incorrect). The tables above were produced before this change.
