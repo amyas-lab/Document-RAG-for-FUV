@@ -201,4 +201,4 @@ All 3B and 1.5B runs refuse all 3 out-of-scope questions. qwen2.5:0.5b invents a
 - Each configuration was run once. Generation at temperature 0.1 is not fully deterministic, and between
   rounds 1 and 2, R3 and MT2 changed label with no change in retrieval.
 - Labels are regex-based plus one reviewer. The model-comparison runs were not manually reviewed.
-- Latency was measured with Ollama on the Apple M2 GPU. CPU-only Docker is about 3–5× slower.
+- Latency was measured with Ollama on the Apple M2 GPU. CPU-only Docker is about 2.5–3× slower (38 s vs 14 s for one qwen2.5:3b answer).

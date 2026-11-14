@@ -5,11 +5,11 @@
 > Fulbright University Vietnam **B.S. Applied Mathematics Major Handbook** (v1.0, Sep 2025),
 > packaged with Docker and served through a web UI.
 
-**Status:** 🚧 In progress. ✅ Task 1 (PDF support, OCR, Qdrant hybrid index, CLI). ⏳ Tasks 2–7.
+**Status:** 🚧 In progress. ✅ Task 1 (PDF support, OCR, Qdrant hybrid index, CLI) · ✅ Task 2 (evaluation, see [`source_code/eval/analysis.md`](source_code/eval/analysis.md)) · ✅ Task 4 (FastAPI + Streamlit) · 🔧 Task 3 (Docker) · ⏳ Tasks 5–7.
 
 **Stack at a glance:** PyMuPDF/pypdf + Tesseract OCR → structure-aware chunking → Ollama embeddings →
 **Qdrant** (hybrid dense + BM25) → Ollama LLM → **FastAPI** backend → **Streamlit** chat UI,
-all orchestrated with **Docker Compose** (fully containerised or host-Ollama profile).
+all orchestrated with **Docker Compose** (fully containerised, or with a host-Ollama override).
 
 ---
 
@@ -144,7 +144,7 @@ exported from Word, with a selectable text layer (tagged PDF).
 - **Acceptance:** an evaluation run produces a results table and labelled examples of correct, incorrect, incomplete and ambiguous answers.
 
 ### Task 3 — Docker deployment
-- **F3.1** `docker/Dockerfile`: multi-stage, `python:3.11-slim`, non-root user, slim dependencies, `HEALTHCHECK`.
+- **F3.1** `docker/Dockerfile.api` and `docker/Dockerfile.ui`: `python:3.11-slim`, non-root user, `HEALTHCHECK`. The UI image has no ML dependencies; the BM25 model is baked into the API image.
 - **F3.2** `docker/docker-compose.yml` defines the services (see §6.5). One command: `docker compose up --build`.
 - **F3.3** Volumes: `./data/documents` → `/app/data/documents` (read-only), `qdrant_storage` → `/qdrant/storage` (named volume), `ollama_models` → `/root/.ollama` (named volume).
 - **F3.4** Configuration via `.env` (`LLM_MODEL`, `EMBED_MODEL`, `OLLAMA_URL`, `TOP_K`, …). `.env.example` is committed.
@@ -260,23 +260,25 @@ API contract (`api/main.py`):
 | `GET` | `/health` | `{status, ollama: bool, qdrant: bool, collection, n_chunks}` |
 | `GET` | `/models` | Installed Ollama chat models |
 | `POST` | `/chat` | `{question, history: [{role, content}], model?, top_k?, temperature?, mode: strict\|fallback}` → `{answer, sources: [{page, section, score, text}], standalone_query, latency_ms}` |
-| `POST` | `/chat/stream` | Same body. Server-Sent Events: `token` events, then a final `sources` event |
+| `POST` | `/chat/stream` | Same body. Server-Sent Events: one `sources` event, then `token` events, then `done` (full result) or `error` |
 | `POST` | `/index` | Re-index `data/documents` (or an uploaded PDF into a named collection) |
 
 The Streamlit app (`ui/app.py`) is a pure client. It keeps the chat history in `st.session_state` and talks to the API only through `API_URL`.
 
-### 6.5 Docker topology — ✅ DECIDED: option C (compose profiles)
+### 6.5 Docker topology — ✅ DECIDED: option C (full stack + host-Ollama override)
 
 > ⚠️ **Important on macOS:** Docker Desktop containers **cannot use the Apple-Silicon GPU (Metal)**.
-> Ollama inside a container on the M2 runs **CPU-only** (roughly 3–10× slower). Native Ollama on macOS uses Metal.
+> Ollama inside a container on the M2 runs **CPU-only** (measured: about 38 s vs 14 s per answer with qwen2.5:3b). Native Ollama on macOS uses Metal.
 
 | Option | Services | Pros | Cons |
 |---|---|---|---|
 | A. App container + **host** Ollama | `app` → `host.docker.internal:11434` | Fast on Mac (Metal GPU). Small image | Not fully self-contained (Ollama must be installed on the host) |
 | B. Fully containerised | `ollama` + `app` (+ `ui`) (+ `qdrant`) | One-command, fully reproducible. Works on any Linux (with NVIDIA GPU passthrough via `deploy.resources`) | Slow on Mac (CPU). First run downloads models into a volume |
-| **C. Both, via compose profiles** ⭐ | Default = B. `OLLAMA_URL=http://host.docker.internal:11434` + `--profile host-ollama` = A | Reproducible *and* fast for the demo. Easy to explain in the report | Slightly more compose config |
+| **C. Both** ⭐ | Default = B. Adding `docker-compose.host-ollama.yml` = A | Reproducible *and* fast for the demo. Easy to explain in the report | Slightly more compose config |
 
 **Decision: C.** Fully containerised by default (graders get one command). On the Mac, record the demo with host Ollama for speed and explain the GPU trade-off in the report.
+
+Implementation note: C is built as a base compose file plus an override file, not as compose profiles. With profiles, the default `docker compose up` would need a flag or a `.env` file to start the bundled Ollama. The override moves `ollama` and `ollama-init` into an inactive profile and points the API at `host.docker.internal`.
 
 ### 6.6 Evaluation tooling — recommendation
 - **Manual labels** (required by the assignment): Correct / Incomplete / Incorrect / Ambiguous / Correct refusal, with a short reason.
@@ -329,7 +331,8 @@ Document-RAG-for-FUV/
 ├── docker/
 │   ├── Dockerfile.api            # FastAPI + RAG core + Tesseract
 │   ├── Dockerfile.ui             # Streamlit client (slim, no ML deps)
-│   ├── docker-compose.yml        # ollama + qdrant + api + ui, profile host-ollama
+│   ├── docker-compose.yml        # ollama + ollama-init + qdrant + api + ui
+│   ├── docker-compose.host-ollama.yml  # override: use Ollama on the host (Metal GPU)
 │   ├── ollama-init.sh            # pulls models on first start
 │   └── README.md                 # deployment guide
 ├── report/                       # report source + report.pdf
@@ -369,9 +372,9 @@ python -m eval.run_eval --config eval/grid.yaml
 
 **Docker**
 ```bash
-cp .env.example .env
-docker compose -f docker/docker-compose.yml up --build                          # fully containerised
-docker compose -f docker/docker-compose.yml --profile host-ollama up --build    # use host Ollama (fast on Mac)
+cd docker
+docker compose up --build -d                                                         # fully containerised
+docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up --build -d # use host Ollama (fast on Mac)
 ```
 
 ---
@@ -384,9 +387,9 @@ docker compose -f docker/docker-compose.yml --profile host-ollama up --build    
 | D2 | Vector DB | **Qdrant** (server in Docker, embedded locally), hybrid dense + BM25 | Exact course-code matching, dashboard, real multi-service deployment | 2026-11-01 |
 | D3 | PDF parser / OCR | **pypdf** (baseline) + **pymupdf4llm** (improved), switch `PDF_PARSER`; **Tesseract** OCR for pages with no text layer | Comparable in the report; recovers the page-14 flowchart | 2026-11-01 |
 | D4 | UI architecture | **FastAPI + Streamlit** | Clear backend integration; reusable API | 2026-11-01 |
-| D5 | Docker topology | **Compose profiles**: full stack by default, `host-ollama` profile for Metal GPU on Mac | Reproducible and fast for the demo | 2026-11-01 |
-| D6 | Default LLM / embedding | proposed `qwen2.5:3b` / `nomic-embed-text` | §6.3 | |
-| D7 | Prompt mode | proposed strict grounding + citations (baseline fallback kept as an experiment) | Reduces hallucination on policy questions | |
+| D5 | Docker topology | Full stack by default + **host-Ollama override file** for Metal GPU on Mac | Reproducible and fast for the demo | 2026-11-01 |
+| D6 | Default LLM / embedding | `qwen2.5:3b` / `nomic-embed-text` (`qwen2.5:1.5b` recommended for CPU-only Docker) | Evaluation: 1.5B ≈ 3B quality at 2× speed; 0.5B hallucinates; mxbai only helps with pypdf | 2026-11-01 |
+| D7 | Prompt mode | Strict grounding + citations (baseline fallback kept as an experiment) | Same score as fallback (0.73 vs 0.76), but it fails by refusing rather than guessing | 2026-11-01 |
 
 ---
 
