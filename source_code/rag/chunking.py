@@ -27,7 +27,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from .config import Config
 
-CHUNKER_VERSION = 2   # bump when chunk output changes -> triggers re-indexing
+CHUNKER_VERSION = 3   # bump when chunk output changes -> triggers re-indexing
 
 COURSE_CODE = re.compile(r"\b(MATH|CS|ECON|IS)\s*(\d{3})\b")
 _MD_HEADING = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
@@ -43,6 +43,12 @@ def _level_from_number(title: str, default: int) -> int:
     """'5. X' -> 2, '5.1. X' -> 3, '5.2.5. X' -> 4 (consistent regardless of font size)."""
     m = _NUMBER_PREFIX.match(title)
     return 2 + m.group(1).count(".") if m else default
+_ITALIC_HEADING = re.compile(r"^_([A-Z][A-Za-z ,&/()-]{2,60}[A-Za-z)])_$")   # "_Sample Advanced Courses_"
+# "Advanced Courses (300 level): ...", "Research and Writing Seminar: ...", "Capstone Project (optional): ..."
+_COURSE_LABEL = re.compile(r"^([A-Z][A-Za-z ]{2,40} (?:Courses|Seminar|Project)(?: \([\w ]{3,20}\))?):\s+\S")
+ITALIC = 0   # pseudo-level returned by _detect_heading for italic sub-headings
+_COURSE_LEVELS = {"1": "100-level (Foundation)", "2": "200-level (Intermediate)",
+                  "3": "300-level (Advanced)", "4": "400-level (Capstone)"}
 _NOT_A_HEADING = re.compile(r"^(pre-?requisites?|cross-?list|note)\b", re.I)
 
 
@@ -125,6 +131,9 @@ def linearize_table(text: str, section: _Section) -> str:
             records.append(caption)
             continue
         fields = [f"{h}: {c}" if h else c for h, c in zip(header, cells) if c]
+        code = COURSE_CODE.fullmatch(cells[0]) if cells and header and "code" in header[0].lower() else None
+        if code and code.group(1) == "MATH" and code.group(2)[0] in _COURSE_LEVELS:   # e.g. "300-level (Advanced)"
+            fields.insert(2, f"Level: {_COURSE_LEVELS[code.group(2)[0]]}")
         fields += [c for c in cells[len(header):] if c]
         records.append((f"[{caption}] " if caption else "") + " | ".join(fields))
     return "\n".join(records)
@@ -133,15 +142,19 @@ def linearize_table(text: str, section: _Section) -> str:
 def _detect_heading(line: str, toc: set[str]) -> tuple[int, str] | None:
     """Return (level, title) if the line is a section heading.
 
-    Three signals: Markdown '#' headings from the parser, numbered headings ("5.1. ..."),
-    and plain lines that exactly match a table-of-contents entry."""
+    Four signals: Markdown '#' headings from the parser, numbered headings ("5.1. ..."), plain lines
+    that exactly match a table-of-contents entry, and short italic-only lines ("_Sample Advanced
+    Courses_"), which the handbook uses as sub-headings without a heading font."""
     s = line.strip()
     m = _MD_HEADING.match(s)
-    if m:
+    if m and not _ITALIC_HEADING.match(m.group(2).strip()):
         title = m.group(2).strip(" _*:")
         if not title or _NOT_A_HEADING.match(title):
             return None
         return _level_from_number(title, len(m.group(1))), title
+    m = _ITALIC_HEADING.match(m.group(2).strip() if m else s)
+    if m and len(m.group(1).split()) <= 6:
+        return ITALIC, m.group(1)     # level resolved by _build_sections from the context
     m = _NUMBERED_HEADING.match(s)
     if m:
         return 2 + m.group(1).count("."), s.rstrip(":")
@@ -161,6 +174,12 @@ def _build_sections(pages: list[Document]) -> list[_Section]:
         current = _Section(source=source, path=tuple(t for _, t in stack if t))
         sections.append(current)
 
+    # Handbook-specific nesting below a numbered/### section (level `top`):
+    #   "X Courses (N level): description" paragraph   -> label sub-section       (top + 1)
+    #   "_Sample X Courses_" italic line after a label -> child of the label       (top + 2)
+    #   "_List of Applied Courses_" italic line         -> sub-section that owns the
+    #   "#### Economics Courses" ... headings that follow it                        (+1)
+    top, label_active, list_level = 3, False, None
     for doc in pages:
         source, page, ocr = doc.metadata["source"], doc.metadata["page"], doc.metadata.get("ocr", False)
         toc = {_norm(t) for t in doc.metadata.get("toc_titles", ())}
@@ -189,6 +208,22 @@ def _build_sections(pages: list[Document]) -> list[_Section]:
 
         for line in lines:
             heading = None if ocr else _detect_heading(line, toc)
+            label = None if ocr or heading else _COURSE_LABEL.match(line.strip())
+            if label:                   # "Advanced Courses (300 level): ..." starts a sub-section
+                heading = (top + 1, label.group(1))
+                label_active, list_level = True, None
+            elif heading:
+                level, title = heading
+                if level == ITALIC:
+                    level = top + 2 if label_active else top + 1
+                    list_level = level if title.lower().startswith("list of") else None
+                elif list_level is not None and level == top + 1:
+                    level = list_level + 1          # e.g. "Economics Courses" under the list
+                elif level > 1:
+                    label_active, list_level = False, None
+                    if level <= 3:
+                        top = level
+                heading = (level, title)
             if heading:
                 flush()
                 level, title = heading
@@ -198,6 +233,8 @@ def _build_sections(pages: list[Document]) -> list[_Section]:
                     stack.pop()
                 stack.append((level, title))
                 start(source)
+                if label:               # keep the description paragraph as the section's text
+                    para.append(line)
                 continue
             if not line.strip():
                 flush()

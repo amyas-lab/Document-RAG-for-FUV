@@ -56,9 +56,15 @@ def test_structure_chunking_one_chunk_per_course():
 
     # catalogue table: one record per course, header carried onto page 22, caption repaired
     text = "\n".join(c.page_content for c in chunks)
-    assert "Course Code: MATH 301 | Course Title: Optimization | Availability: Every other year" in text
+    assert ("Course Code: MATH 301 | Course Title: Optimization | Level: 300-level (Advanced) | "
+            "Availability: Every other year") in text
     assert "Course Code: MATH 313 | Course Title: Numerical Analysis" in text
     assert "[Courses in other majors cross-listed with Applied Mathematics] Course Code: ECON 209" in text
+
+    # italic sub-headings and "X Courses (N level):" labels give each course list its real context
+    assert any(s.endswith("Advanced Courses (300 level) > Sample Advanced Courses") for s in sections)
+    assert any(s.endswith("Elective Applied Courses > List of Applied Courses > Applied Mathematics Courses")
+               for s in sections)
 
 
 def test_linearize_table_continuation_and_caption():
@@ -66,10 +72,10 @@ def test_linearize_table_continuation_and_caption():
 
     sec = _Section(source="x.pdf", path=("Catalogue",))
     first = "|CODE|TITLE|CROSS- LISTING|\n|---|---|---|\n|MATH 101|Calculus||"
-    assert linearize_table(first, sec) == "Code: MATH 101 | Title: Calculus"
+    assert linearize_table(first, sec) == "Code: MATH 101 | Title: Calculus | Level: 100-level (Foundation)"
     nxt = "|MATH 102|Ideas||\n|---|---|---|\n||Other majors c|ross-listed|\n|ECON 209|Econometrics|MATH|"
     assert linearize_table(nxt, sec).splitlines() == [
-        "Code: MATH 102 | Title: Ideas",
+        "Code: MATH 102 | Title: Ideas | Level: 100-level (Foundation)",
         "Other majors cross-listed",
         "[Other majors cross-listed] Code: ECON 209 | Title: Econometrics | Cross-listing: MATH",
     ]

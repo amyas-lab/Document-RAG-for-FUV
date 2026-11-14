@@ -20,8 +20,11 @@ Rules:
 5. End with the page numbers you used, e.g. "(Source: p. 9, p. 21)".
 6. Be concise: 2-5 sentences or a short bullet list.
 7. If a conversation is shown, the question is a follow-up. Answer what is NEW in it and do not repeat
-   your previous answer. If the user asks for a list and the handbook gives a rule instead of a fixed
-   list, say so in one sentence, then list the relevant items the excerpts do name."""
+   your previous answer.
+8. Never present a list from one section as the answer for another. A list of elective courses, sample
+   courses or courses of the major is NOT a list of required courses for something else. If the user asks
+   for specific items but the excerpts only state a rule (e.g. "at least 6 MATH courses"), say clearly that
+   the handbook does not name specific items for that, and say what the rule allows."""
 
 STRICT_USER = """HANDBOOK EXCERPTS:
 {context}
@@ -38,8 +41,7 @@ FOLLOW-UP QUESTION (as asked): {original}
 FOLLOW-UP QUESTION (made standalone): {question}
 
 The user has already read your previous answer. Do not restate it. Give only the additional
-information the follow-up asks for, using the excerpts (for example, name the specific courses
-instead of repeating the rule). Cite pages."""
+information the follow-up asks for. Cite pages."""
 
 # Baseline prompt (sample_code/run_txt.py), unchanged.
 FALLBACK_TEMPLATE = """You are a helpful AI assistant that answers questions based on provided documents.

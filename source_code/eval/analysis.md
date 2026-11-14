@@ -203,22 +203,50 @@ All 3B and 1.5B runs refuse all 3 out-of-scope questions. qwen2.5:0.5b invents a
 - Labels are regex-based plus one reviewer. The model-comparison runs were not manually reviewed.
 - Latency was measured with Ollama on the Apple M2 GPU. CPU-only Docker is about 2.5–3× slower (38 s vs 14 s for one qwen2.5:3b answer).
 
-## 7. Change after the evaluation: follow-up questions
+## 7. Changes after the evaluation: follow-up questions and course lists
 
-Found while testing the web UI. In the conversation "What are the requirements for a minor?" → "What are
-those courses exactly?" → "Can you list them out?", the bot repeated the same rule three times. There were two causes:
+Found while testing the web UI. Conversation: "What are the requirements for a minor?" → "What are those
+courses exactly?" → "Can you list them out?"
 
-1. The generation prompt only contained the rewritten question, not the conversation, so the model did not
-   know the user had already read that rule.
-2. The rewritten query is dominated by "minor", so it retrieved the same 5 passages every time, although the
-   handbook names courses by level elsewhere (pp. 10–13).
+**Round A.** The bot repeated the same rule three times. There were two causes:
+1. The generation prompt contained only the rewritten question, not the conversation.
+2. The rewritten query retrieved the same passages again.
 
-Fix (`rag/chain.py`, `rag/prompts.py`):
-- For follow-ups, the last 2 exchanges and the original wording are added to the prompt, with an instruction
-  to give only the new information.
-- 3 extra passages are retrieved (8 instead of 5).
+Fix: for follow-ups, add the last two exchanges and the original wording to the prompt, and retrieve 3 extra
+passages. The bot then listed "Optimization, Statistical Learning, Numerical Analysis, …" as the minor's
+courses. **That answer was wrong.** Those courses are the major's *Elective Applied Courses* list (p. 12).
+The handbook names no fixed courses for the minor: any 6 MATH courses count, with at least three at the
+200 level or above and at least one at the 300 level (p. 10).
 
-Result: the second and third turns now list specific courses (Optimization, Statistical Learning, Numerical
-Analysis, …) instead of restating the rule. The model still overstates them as "required" rather than examples,
-a small-model limitation. On the test set, MT1–MT3 give the same labels as before (MT1 and MT3 correct, MT2 still
-incorrect). The tables above were produced before this change.
+**Round B: root cause in chunking.** The handbook marks sub-headings with italic lines (`_Sample Advanced
+Courses_`, `_List of Applied Courses_`) and with label paragraphs ("Advanced Courses (300 level): …"). The
+chunker did not detect either, so:
+- the advanced-course list was filed under "Sample Foundation Courses";
+- the elective list lost its "Elective Applied Courses" parent.
+
+Fixes (`CHUNKER_VERSION = 3`):
+- italic and label sub-headings are detected and nested. Section paths now read, for example,
+  `… > Elective Applied Courses > List of Applied Courses > Applied Mathematics Courses` and
+  `… > Advanced Courses (300 level) > Sample Advanced Courses`;
+- catalogue records carry the handbook's level term, for example `Level: 300-level (Advanced)`;
+- prompt rule 8: never present a list from one section as the answer for another; if only a rule exists, say so.
+
+**Result.**
+- The wrong course list is gone.
+- On "what are those courses exactly?", qwen2.5:3b now restates the rule instead of saying that the handbook
+  names no specific courses. That is not wrong, but it is not helpful.
+- Two related limits remain:
+  - **Retrieval.** Every rewrite of the follow-up keeps the word "minor", so the course catalogue is never
+    retrieved. Multi-query rewriting (3 LLM-generated queries) was tried and did not help, because all 3 queries
+    contained "minor".
+  - **Reading tables.** In "Which sample advanced courses are offered every other year?" the catalogue records
+    were retrieved, but the model listed MATH 308 (once a year) and missed several courses.
+
+Re-running the 45 questions with these changes (automatic labels, qwen2.5:3b strict): context recall
+0.917 → 0.917 (unchanged); 26 correct vs 27 before.
+- **Gained:** F1 (flowchart: "at least 2 advanced courses").
+- **Lost:** C8 (now guesses "3 credits") and P3 (one strategy missing).
+- MT1–MT3 keep their labels.
+
+At temperature 0.1, differences of one or two questions are within run-to-run noise. The tables in §2–§5
+were produced before these changes.
