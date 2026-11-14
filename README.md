@@ -5,11 +5,19 @@
 > Fulbright University Vietnam **B.S. Applied Mathematics Major Handbook** (v1.0, Sep 2025),
 > packaged with Docker and served through a web UI.
 
-**Status:** 🚧 In progress. ✅ Task 1 (PDF support, OCR, Qdrant hybrid index, CLI) · ✅ Task 2 (evaluation, see [`source_code/eval/analysis.md`](source_code/eval/analysis.md)) · ✅ Task 3 (Docker) · ✅ Task 4 (FastAPI + web UI) · ⏳ Tasks 5–7.
+**Status:** 🚧 In progress. ✅ Task 1 (PDF support, OCR, Qdrant hybrid index, CLI) · ✅ Task 2 (evaluation, see [`source_code/eval/analysis.md`](source_code/eval/analysis.md)) · ✅ Task 3 (Docker) · ✅ Task 4 (FastAPI + web UI) · ✅ Task 5 ([report](report/report.pdf)) · ⏳ Tasks 6–7.
 
 **Stack at a glance:** PyMuPDF/pypdf + Tesseract OCR → structure-aware chunking → Ollama embeddings →
 **Qdrant** (hybrid dense + BM25) → Ollama LLM → **FastAPI** backend → **web UI** (static HTML/CSS/JS served by nginx),
 all orchestrated with **Docker Compose** (fully containerised, or with a host-Ollama override).
+
+| Answer with sources and a follow-up question | Cited handbook page |
+|---|---|
+| ![Follow-up question with sources](docs/screenshots/02-follow-up-with-sources.jpg) | ![Cited handbook page](docs/screenshots/03-cited-handbook-page.jpg) |
+| **Out-of-scope question (refusal)** | **Dark mode** |
+| ![Out-of-scope refusal](docs/screenshots/04-out-of-scope-refusal.jpg) | ![Dark mode](docs/screenshots/06-dark-mode.jpg) |
+
+More in [`docs/screenshots/`](docs/screenshots/): welcome screen, settings.
 
 ---
 

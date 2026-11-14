@@ -1,7 +1,7 @@
 ---
 title: "A Local RAG Assistant for the FUV Applied Mathematics Major Handbook"
 subtitle: "CS311 Advanced Deep Learning, Fall 2026: Final Project Report"
-author: "STUDENT_NAME (STUDENT_ID)"
+author: "Nguyen Mai Anh (240166))"
 date: "November 2026"
 ---
 
@@ -383,6 +383,14 @@ palette and the IBM Plex typefaces:
 - **Status:** the LLM and the index are shown as up or down, with the chunk count and a "Rebuild index" button.
 
 The fonts are bundled, so the UI works offline. The layout adapts to phone width.
+
+![A follow-up question. "What are its prerequisites?" is rewritten to "What are the prerequisites for MATH 205?" (shown above the sources). The page citation is a clickable chip, and the source cards show the linearised catalogue records with their course level.](../docs/screenshots/02-follow-up-with-sources.jpg){width=100%}
+
+![Clicking "Open page 21" shows the cited handbook page, rendered by the API, next to the answer.](../docs/screenshots/03-cited-handbook-page.jpg){width=100%}
+
+![An out-of-scope question (tuition) is refused with the fixed sentence, styled as a neutral note rather than an error. The retrieved passages remain visible.](../docs/screenshots/04-out-of-scope-refusal.jpg){width=100%}
+
+![The settings drawer: model, answer mode, number of passages, temperature, appearance and index status.](../docs/screenshots/05-settings.jpg){width=100%}
 
 # 8. Observations and lessons learned
 
