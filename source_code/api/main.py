@@ -2,6 +2,7 @@
 
 Run locally:   uvicorn api.main:app --reload --port 8000     (from source_code/)
 Swagger UI:    http://localhost:8000/docs
+Web UI:        http://localhost:8000/ui/   (local dev; in Docker the UI is served by nginx)
 """
 
 from __future__ import annotations
@@ -10,17 +11,21 @@ import json
 import logging
 import threading
 from collections.abc import Iterator
+from functools import lru_cache
 from typing import Literal
 
+import pymupdf
 import requests
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, Response, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from rag.chain import RAGPipeline
-from rag.config import load_config
+from rag.config import ROOT, load_config
 from rag.index import build_index, index_status
+from rag.loaders import find_documents
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("api")
@@ -177,3 +182,60 @@ def reindex(req: IndexRequest | None = None) -> dict:
         _pipeline = None   # rebuild the store handle on the next request
     return result
 
+
+def _document(name: str):
+    """Resolve a document by file name; only files found in data/documents are served."""
+    for path in find_documents(CFG.data_path):
+        if path.name == name:
+            return path
+    raise HTTPException(404, f"Unknown document: {name}")
+
+
+@lru_cache(maxsize=16)
+def _page_count(path: str, mtime: float) -> int:
+    with pymupdf.open(path) as doc:
+        return doc.page_count
+
+
+@app.get("/documents")
+def list_documents() -> dict:
+    """Indexed source files with their page counts (used by the UI to show a cited page)."""
+    docs = []
+    for path in find_documents(CFG.data_path):
+        pages = _page_count(str(path), path.stat().st_mtime) if path.suffix.lower() == ".pdf" else 0
+        docs.append({"name": path.name, "pages": pages})
+    return {"documents": docs}
+
+
+@lru_cache(maxsize=64)
+def _render_page(path: str, mtime: float, page: int, width: int) -> bytes:
+    with pymupdf.open(path) as doc:
+        pg = doc[page - 1]
+        zoom = width / pg.rect.width
+        return pg.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom), alpha=False).tobytes("png")
+
+
+@app.get("/documents/{name}/pages/{page}.png")
+def get_page_image(name: str, page: int, width: int = Query(900, ge=200, le=2000)) -> Response:
+    """One PDF page rendered as PNG, so the UI can show the cited page in any browser."""
+    path = _document(name)
+    if path.suffix.lower() != ".pdf":
+        raise HTTPException(400, "Only PDF documents have pages")
+    mtime = path.stat().st_mtime
+    if not 1 <= page <= _page_count(str(path), mtime):
+        raise HTTPException(404, f"Page {page} out of range")
+    png = _render_page(str(path), mtime, page, width)
+    return Response(png, media_type="image/png", headers={"Cache-Control": "public, max-age=3600"})
+
+
+@app.get("/documents/{name}")
+def get_document(name: str) -> FileResponse:
+    """Serve an indexed document inline. Only files found in data/documents are served."""
+    path = _document(name)
+    media = "application/pdf" if path.suffix.lower() == ".pdf" else "text/plain; charset=utf-8"
+    return FileResponse(path, media_type=media, headers={"Content-Disposition": f'inline; filename="{name}"'})
+
+
+WEB_DIR = ROOT / "web"
+if WEB_DIR.is_dir():   # local development: serve the static UI from the API process
+    app.mount("/ui", StaticFiles(directory=WEB_DIR, html=True), name="ui")
