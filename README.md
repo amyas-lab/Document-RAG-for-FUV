@@ -1,421 +1,298 @@
-# FUV Handbook RAG — Local Retrieval-Augmented Chatbot for the B.S. Applied Mathematics Handbook
+# Applied Mathematics Handbook Assistant
 
-> CS311 Advanced Deep Learning — Final Project (Fall 2026)
-> A fully **local** RAG system (no cloud APIs) that answers questions about the
-> Fulbright University Vietnam **B.S. Applied Mathematics Major Handbook** (v1.0, Sep 2025),
-> packaged with Docker and served through a web UI.
+A fully **local** Retrieval-Augmented Generation (RAG) chatbot that answers questions about the Fulbright
+University Vietnam **B.S. Applied Mathematics Major Handbook**, with page citations. Documents, embeddings,
+the vector database and the language model all run on your machine; nothing is sent to a cloud API.
 
-**Status:** 🚧 In progress. ✅ Task 1 (PDF support, OCR, Qdrant hybrid index, CLI) · ✅ Task 2 (evaluation, see [`source_code/eval/analysis.md`](source_code/eval/analysis.md)) · ✅ Task 3 (Docker) · ✅ Task 4 (FastAPI + web UI) · ✅ Task 5 ([report](report/report.pdf)) · ⏳ Tasks 6–7.
+*CS311 Advanced Deep Learning, Fall 2026: final project.*
 
-**Stack at a glance:** PyMuPDF/pypdf + Tesseract OCR → structure-aware chunking → Ollama embeddings →
-**Qdrant** (hybrid dense + BM25) → Ollama LLM → **FastAPI** backend → **web UI** (static HTML/CSS/JS served by nginx),
-all orchestrated with **Docker Compose** (fully containerised, or with a host-Ollama override).
+![Web UI: a follow-up question answered with page citations and the retrieved passages](docs/screenshots/02-follow-up-with-sources.jpg)
 
-| Answer with sources and a follow-up question | Cited handbook page |
-|---|---|
-| ![Follow-up question with sources](docs/screenshots/02-follow-up-with-sources.jpg) | ![Cited handbook page](docs/screenshots/03-cited-handbook-page.jpg) |
-| **Out-of-scope question (refusal)** | **Dark mode** |
-| ![Out-of-scope refusal](docs/screenshots/04-out-of-scope-refusal.jpg) | ![Dark mode](docs/screenshots/06-dark-mode.jpg) |
+**Features:**
 
-More in [`docs/screenshots/`](docs/screenshots/): welcome screen, settings.
+- **PDF support with OCR.** PyMuPDF / pymupdf4llm (or pypdf) extracts the text. Tesseract reads image-only pages,
+  such as the program flowchart.
+- **Structure-aware chunking.** One chunk per course description or requirement block, each prefixed with its
+  section path. Tables are turned into one record per row.
+- **Hybrid retrieval in Qdrant.** Dense (`nomic-embed-text`) and BM25 search, fused with Reciprocal Rank Fusion.
+  The index is rebuilt automatically when the documents or the settings change.
+- **Grounded answers.** A strict prompt with page citations and a fixed refusal when the handbook has no answer.
+  Follow-up questions are rewritten into standalone queries.
+- **Web UI.** Streaming answers, clickable citations, a sources panel and a viewer for the cited handbook page.
+- **One-command Docker deployment.** Ollama, Qdrant, the FastAPI backend and an nginx web UI.
 
----
-
-## Table of Contents
-1. [Project Goals](#1-project-goals)
-2. [Baseline Analysis](#2-baseline-analysis-sample_coderun_txtpy)
-3. [Knowledge Source: MATH Handbook Profile](#3-knowledge-source-math-handbook-profile)
-4. [System Architecture](#4-system-architecture)
-5. [Task Specifications (1–7)](#5-task-specifications)
-6. [Design Options & Recommendations](#6-design-options--recommendations)
-7. [Evaluation Plan](#7-evaluation-plan)
-8. [Repository Layout](#8-repository-layout)
-9. [Installation & Usage (target)](#9-installation--usage-target)
-10. [Decision Log](#10-decision-log)
-11. [Known Limitations](#11-known-limitations)
-12. [Milestones](#12-milestones)
+**Results** (45-question test set, manually reviewed, qwen2.5:3b): **0.77**, against 0.58 for a baseline-like
+pipeline using the same model. Details are in the [report](report/report.pdf) and the
+[evaluation analysis](source_code/eval/analysis.md).
 
 ---
 
-## 1. Project Goals
+## Contents
 
-| # | Task | Weight | Deliverables |
-|---|------|--------|--------------|
-| 1 | PDF file support | 5% | Modified source code; demo of PDF retrieval |
-| 2 | Major handbook chatbot (**Applied Mathematics**) | 15% | Working chatbot; test questions + results; performance analysis |
-| 3 | Docker container deployment | 20% | Dockerfile; container config (compose); deployment instructions |
-| 4 | UI/UX deployment | 20% | Web interface; backend integration; screenshots |
-| 5 | Report (≥ 1,500 words) | 15% | PDF report |
-| 6 | Video demos (Tasks 1–4) | 20% | 4 videos (5% each) |
-| 7 | GitHub repository + README | 5% | This repository |
-
-**Non-functional requirements**
-- **Local-only:** documents, embeddings, vector DB and LLM all run on the user's machine (Ollama).
-- **Reproducible:** one-command startup via Docker Compose. Models and the index persist in volumes.
-- **Transparent:** every answer shows the retrieved sources (page and section) so that it can be checked.
-- **Dev machine:** Apple M2, 16 GB RAM, macOS. **Target runtime:** macOS and Linux.
+1. [Repository layout](#1-repository-layout)
+2. [Quick start with Docker](#2-quick-start-with-docker)
+3. [Local installation](#3-local-installation)
+4. [Usage](#4-usage)
+5. [Configuration](#5-configuration)
+6. [Evaluation and tests](#6-evaluation-and-tests)
+7. [How it works](#7-how-it-works)
+8. [Troubleshooting](#8-troubleshooting)
+9. [Project deliverables](#9-project-deliverables)
 
 ---
 
-## 2. Baseline Analysis (`sample_code/run_txt.py`)
-
-| Aspect | Baseline behaviour | Problem for the handbook use case | Planned change |
-|---|---|---|---|
-| Loader | `*.txt` only | Handbook is a PDF | PDF loader with per-page metadata (Task 1) |
-| Chunking | `RecursiveCharacterTextSplitter(1000, 200)` | Cuts through course entries and tables. No section info | Structure-aware chunking with `page`, `section`, `course_code` metadata |
-| Embeddings | `nomic-embed-text` (Ollama), no task prefixes | nomic expects `search_query:` / `search_document:` prefixes | Add prefixes. Compare against one alternative model |
-| Vector store | Chroma, persisted under `data_txt/vector_store` | Re-index only happens when the folder is missing. No change detection. Dense-only search misses exact course codes | **Qdrant** with hybrid dense + sparse (BM25) search. Content hash → automatic re-index when documents change |
-| Score | `1/(1+L2 distance)`, averaged over top-K, threshold 0.3 | Mean score is a weak signal. Threshold not calibrated | Cosine space. Threshold calibrated on the test set |
-| Prompt | Falls back to **general knowledge** when context is weak | Leads to hallucinated policies and requirements | **Strict grounding:** answer only from context, otherwise say "not found in the handbook". Cite pages |
-| LLM | `qwen2.5:0.5b`, temperature 0.7 | Too small and too random for factual QA | Larger model, temperature 0–0.2. Compare models |
-| Config | Hard-coded constants | Not Docker-friendly | `config.yaml` + environment-variable overrides (`OLLAMA_URL`, `LLM_MODEL`, …) |
-| Interface | One-shot CLI | No conversation history | CLI + web UI with chat history |
-| Requirements | Includes `torch`, `sentence-transformers`, `unstructured`, `ragas` | About 2+ GB of unused dependencies in the Docker image | Slim `requirements.txt`. Heavy extras become optional |
-
----
-
-## 3. Knowledge Source: MATH Handbook Profile
-
-`final-project/sample_code/major_handbook_pdfs/MATH_MajorHandbook.pdf`: 29 pages, ~7,700 words,
-exported from Word, with a selectable text layer (tagged PDF).
-
-| Section (TOC) | Pages | Content type | RAG challenge |
-|---|---|---|---|
-| Cover + Table of Contents | 1–2 | Dot-leader lines | Noise chunks ("MATH 301: Optimization …… 24") pollute retrieval. **Strip them** |
-| 1. Mission, Vision, Graduate Attributes (GA1–GA10) | 3 | Prose + list | Generic FUV text that is shared across all handbooks |
-| 2. Program Description, PEOs, PLOs (CoreLO 1–5, MLO 1–5) | 4–5 | Prose + 2 tables | Table rows wrap across several lines |
-| 3. Graduate Studies & Career Paths | 5–7 | Lists | Easy |
-| 4. Program Structure: degree requirements (40 + 56 credits, 128 total), minor (24 credits), course tiers, elective applied list | 8–13 | Numbered lists, nested lists | **Most-asked questions.** Numbers must be exact |
-| — Applied Mathematics **Flowchart** | 14 | **Full-page image, no text layer** | Invisible without OCR (Assignment FAQ #5) |
-| — Sample Student Journeys (Model A / B / Minor) | 15 | 4-column year grid | Columns interleave when extracted as text |
-| — Course ↔ MLO alignment matrix (I/R/M/A) | 16–17 | Dense matrix | Hard for small LLMs to read |
-| 5. Teaching, Learning & Assessment | 17–20 | Prose (accreditation style) | Long, repetitive |
-| 6. Course Catalogue table (availability, cross-listing, prerequisites) | 21–22 | Table. Course codes split across lines ("MATH\n101") | Prerequisite questions depend on the table parse |
-| — Course Descriptions (MATH 101 … 311) | 21–28 | One entry per course | Ideal unit for one chunk per course |
-
-**Inconsistencies inside the handbook.** These are good candidates for the "ambiguous" test cases:
-- Elective applied courses: "at least one at **200-level** or higher" (Degree Requirements, item 9) vs. "at least one at **300 level**" (Major Outline) vs. flowchart "at least 1 at 300-level".
-- **MATH 306** is "Financial Mathematics" in the TOC and course descriptions, but "Numerical Analysis" in the MLO matrix. Numerical Analysis is **MATH 313** in the catalogue.
-- The General Curriculum requirements apply only to students who matriculated in **Fall 2024 or later** (footnote).
-
----
-
-## 4. System Architecture
+## 1. Repository layout
 
 ```
-                    ┌──────────────── Indexing (offline / on change) ────────────────┐
- PDF / TXT files ──►│ Loader ─► Cleaner ─► (OCR for image-only pages) ─► Chunker ─►   │
- data/documents/    │ Embedder (Ollama) ─► Qdrant (dense + sparse, volume)           │
-                    └─────────────────────────────────────────────────────────────────┘
-
-                    ┌──────────────── Query (online) ────────────────────────────────┐
- User ─► Web UI ───►│ Backend: history-aware query ─► Qdrant hybrid retriever (top-K)  │
-   ▲                │ ─► Prompt builder (strict grounding + citations) ─► LLM (Ollama)│
-   └── answer + ────┤ ─► Answer + sources (page, section, score) + latency           │
-       sources      └─────────────────────────────────────────────────────────────────┘
-```
-
-**Core module (`rag/`)** is shared by the CLI, API, UI and evaluation scripts:
-
-| Module | Responsibility |
-|---|---|
-| `config.py` | Load `config.yaml` and apply env-var overrides |
-| `loaders.py` | `.txt` / `.pdf` → `Document(page_content, metadata={source, page, section})` |
-| `cleaning.py` | Strip TOC / dot leaders, headers and footers. Normalise whitespace and ligatures |
-| `ocr.py` | Detect pages with no text layer → OCR (optional dependency) |
-| `chunking.py` | Strategy A: fixed recursive (baseline). Strategy B: structure-aware (sections + one chunk per course) |
-| `index.py` | Create the Qdrant collection (named dense vector + sparse BM25 vector, cosine), upsert points with payload `{source, page, section, course_code, text, doc_hash}`, incremental refresh by content hash |
-| `retriever.py` | Hybrid query (dense + sparse, fused with RRF), optional payload filter (e.g. `course_code`), score threshold |
-| `prompts.py` | System prompt, grounded QA prompt, query-rewrite prompt (for follow-ups) |
-| `chain.py` | `answer(question, history) -> {answer, sources, used_context, latency}` (streaming variant included) |
-
----
-
-## 5. Task Specifications
-
-### Task 1 — PDF file support
-- **F1.1** `loaders.py` loads every `*.pdf` and `*.txt` in `DATA_DIR` (recursively).
-- **F1.2** Text is extracted **per page**. `metadata.page` (1-based) and `metadata.source` are kept so answers can cite pages.
-- **F1.3** Cleaning removes TOC dot leaders, repeated headers and footers, and hyphenation artifacts.
-- **F1.4** Pages whose text layer has fewer than N characters are flagged and handled by OCR (if enabled) or logged as skipped.
-- **F1.5** Chunk → embed → upsert into Qdrant. Re-indexing is triggered automatically when a file's SHA-256 changes. `--reindex` forces a rebuild.
-- **F1.6** CLI: `python -m rag.cli index` / `python -m rag.cli ask -q "..."`.
-- **Acceptance:** a question whose answer exists only in a test PDF (e.g. a short arbitrary PDF) is answered correctly and the correct page is cited.
-
-### Task 2 — Applied Mathematics handbook chatbot
-- **F2.1** Knowledge source: `MATH_MajorHandbook.pdf` only. Collection name `math_handbook`.
-- **F2.2** The chatbot covers program requirements, course offerings, prerequisites, learning outcomes and academic policies.
-- **F2.3** Strict grounding. If the answer is not in the retrieved context, it replies *"I couldn't find this in the Applied Mathematics handbook."* The baseline fallback prompt is kept as an experiment arm.
-- **F2.4** Multi-turn: follow-up questions ("what are its prerequisites?") are rewritten into standalone queries using the chat history before retrieval.
-- **F2.5** Test set: `eval/questions.yaml` with ≥ 30 questions (see §7).
-- **F2.6** Experiments: at least two chunking strategies × two embedding models × three or more LLMs. Results go to `eval/results/*.csv`, and the analysis goes to the report.
-- **Acceptance:** an evaluation run produces a results table and labelled examples of correct, incorrect, incomplete and ambiguous answers.
-
-### Task 3 — Docker deployment
-- **F3.1** `docker/Dockerfile.api` and `docker/Dockerfile.ui`: `python:3.11-slim`, non-root user, `HEALTHCHECK`. The UI image has no ML dependencies; the BM25 model is baked into the API image.
-- **F3.2** `docker/docker-compose.yml` defines the services (see §6.5). One command: `docker compose up --build`.
-- **F3.3** Volumes: `./data/documents` → `/app/data/documents` (read-only), `qdrant_storage` → `/qdrant/storage` (named volume), `ollama_models` → `/root/.ollama` (named volume).
-- **F3.4** Configuration via `.env` (`LLM_MODEL`, `EMBED_MODEL`, `OLLAMA_URL`, `TOP_K`, …). `.env.example` is committed.
-- **F3.5** An init step pulls the required Ollama models on first start (`ollama pull`), then builds the index if it is missing.
-- **F3.6** `docker/README.md` documents the full build → run → test → stop → clean-up sequence for macOS and Linux.
-- **F3.7** Services and ports: `ollama` :11434, `qdrant` :6333 (REST + dashboard at `/dashboard`), `api` :8000 (Swagger at `/docs`), `ui` :8080 (nginx, proxies `/api`). Startup order is enforced with `depends_on: condition: service_healthy`.
-- **Acceptance:** on a clean machine with only Docker installed, `docker compose up` gives a working chatbot at `http://localhost:8080`, the API at `http://localhost:8000/docs` and the Qdrant dashboard at `http://localhost:6333/dashboard`.
-
-### Task 4 — Web UI
-- **F4.1** Chat interface: question input, Markdown-rendered answers, streaming tokens.
-- **F4.2** Conversation history within a session, plus a "New chat" button.
-- **F4.3** A **Sources** panel for each answer: page, section, similarity score and an expandable chunk text.
-- **F4.4** Sidebar settings: LLM model selector (from installed Ollama models), top-K, temperature, strict / fallback mode.
-- **F4.5** Status indicators: Ollama reachable, index size (number of chunks), response latency.
-- **F4.6** Example-question chips for first-time users.
-- **F4.7** (Optional, useful for the Task 1 demo) Upload a PDF → index it into a temporary collection. *(not implemented)*
-- **F4.8** Clicking a page citation highlights the passage and shows the rendered handbook page next to the answer.
-- **Acceptance:** screenshots of a multi-turn conversation with sources, the settings panel, and the "not found" behaviour.
-
-### Task 5 — Report (PDF, ≥ 1,500 words)
-Outline: Introduction → Architecture → PDF processing → Chunking / embedding / retrieval design → Prompt design → Evaluation (setup, metrics, results tables, failure analysis with examples) → Docker deployment → UI design → Lessons learned → Limitations and future work. Written in Markdown/LaTeX → `report/report.pdf`.
-
-### Task 6 — Video demos (4 videos)
-| Video | Shows |
-|---|---|
-| T1 | Code walk-through of the PDF loader, indexing log (pages → chunks), a question answered from the PDF with a page citation |
-| T2 | Handbook Q&A across sections; one example each of correct, incorrect, incomplete and ambiguous answers; evaluation script and results table; model comparison |
-| T3 | Dockerfile + compose walk-through, `docker compose build/up`, `docker ps`, volumes, logs, a query against the container |
-| T4 | Browser UI: multi-turn chat, sources panel, model switching, "not found" behaviour |
-
-### Task 7 — GitHub repository
-- Clean, incremental commit history (one feature per commit, conventional messages).
-- `.gitignore` excludes the vector DB, `.env`, `__pycache__`, `.DS_Store`, Office lock files (`~$*.docx`) and large videos.
-- This README is rewritten from a *specification* into a *user-facing README* at the end of the project.
-
----
-
-## 6. Design Options & Recommendations
-
-### 6.1 Vector database — ✅ DECIDED: Qdrant
-
-The corpus is small (~100–200 chunks), so raw speed does not matter. The choice comes down to ease of operation, features (metadata filtering, hybrid search) and how well it shows in the Docker deliverable.
-
-| Option | Mode | Pros | Cons | Fit |
-|---|---|---|---|---|
-| **ChromaDB** (baseline) | Embedded, persistent (SQLite) | Already in the sample code. LangChain integration. Metadata filters. Index is just a folder → easy volume mount | No built-in BM25 or hybrid search. Embedded mode means a single writer | ⭐ **Recommended (simple path)** |
-| **Qdrant** | Separate server container (or embedded local mode) | Production-grade. Dashboard UI at :6333. Payload filters. Native hybrid (dense + sparse/BM25). Adds a real multi-service compose | One more container. Slightly more code | ⭐ **Recommended (ambitious path)**: strongest Task 3 story |
-| FAISS | In-process library | Very fast, minimal | No metadata store or filtering. Persistence is manual (pickle docstore). No server | OK for experiments only |
-| Milvus | Server (etcd + MinIO + milvus) | Scales to billions of vectors | 3+ containers and several GB of RAM. Overkill for 29 pages | ❌ |
-| pgvector (Postgres) | Server | SQL + vectors. Full-text search in the same DB | Schema and SQL work. Heavier than needed | Possible but not justified |
-| LanceDB | Embedded (columnar files) | Built-in full-text + hybrid. Zero-ops | Less common in course material | Niche alternative |
-
-**Decision: Qdrant.** Implementation notes:
-- Client: `qdrant-client` + `langchain-qdrant` (`QdrantVectorStore`, `RetrievalMode.HYBRID`). Sparse vectors via `FastEmbedSparse(model_name="Qdrant/bm25")`, a small ONNX model with no torch dependency.
-- One collection per knowledge source (`math_handbook`, `task1_test_pdf`), each with a named dense vector (size = embedding dimension, cosine) and a sparse `bm25` vector.
-- **Local dev without Docker:** `QdrantClient(path="./qdrant_local")` (embedded mode, same API). In Docker: `QdrantClient(url="http://qdrant:6333")`. Selected with `QDRANT_URL` / `QDRANT_PATH`.
-- Changing the embedding model changes the vector size, so the collection name includes the model (`math_handbook__nomic-embed-text`). This keeps experiments side by side.
-- Chroma stays documented as the baseline in the report (why it was replaced: hybrid search, server mode, dashboard).
-
-### 6.2 PDF extraction (+ OCR) — ✅ DECIDED: pypdf (baseline) + pymupdf4llm (improved) + Tesseract OCR
-
-| Option | Tables | Layout / headings | Image pages | Docker weight | Notes |
-|---|---|---|---|---|---|
-| `pypdf` (assignment suggestion) | ❌ columns interleave | ❌ | ❌ | tiny | Minimum to pass Task 1 |
-| `pdfplumber` | ✅ `extract_tables()` | partial | ❌ | small | Good table parsing for the catalogue |
-| **PyMuPDF + `pymupdf4llm`** | ✅ Markdown tables | ✅ Markdown headings (from font size) | detect + optional Tesseract OCR | small (~50 MB) | Fast. Markdown output makes heading-based chunking simple. AGPL licence (fine for coursework) |
-| Docling (IBM) / `unstructured[pdf]` | ✅✅ layout models | ✅✅ | ✅ built-in OCR | **heavy** (torch, models; 2–4 GB image) | Best quality, slow build. Hurts Docker reproducibility |
-
-OCR is only needed for **page 14 (flowchart)**. Choices: (a) Tesseract OCR via `pytesseract` (adds about 30 MB of apt packages), (b) skip it and record the limitation in the report, (c) a hand-written text description of the flowchart, indexed as a side document.
-
-**Decision:** **`pypdf` as the baseline loader** (it matches the assignment, so Task 1 has a clean demo) **+ `pymupdf4llm` as the improved loader**, behind a `PDF_PARSER=pypdf|pymupdf` switch so the report can compare them. Enable **Tesseract OCR for pages with no text layer**. This also demonstrates FAQ #5 in the video.
-
-### 6.3 Chunking, embeddings & LLM — recommendation (configurable, compared in §7)
-
-**Chunking**
-| Strategy | Description |
-|---|---|
-| A. Fixed (baseline) | Recursive, 1000 / 200 characters |
-| B. **Structure-aware** ⭐ | Split on handbook headings (`1.`–`6.`, sub-headings). **One chunk per course description** (`MATH xxx:`). Tables kept whole (catalogue rows serialised as `MATH 104 — Multivariable Calculus — Once a year — Prereq: MATH 101`). The section path is prepended to each chunk ("4. Program Structure > Minor Requirements") |
-| C. Small-to-big (optional) | Retrieve small chunks, send their parent section to the LLM |
-
-**Embedding models** (all available through Ollama):
-| Model | Dim | Size | Notes |
-|---|---|---|---|
-| `nomic-embed-text` (baseline) | 768 | 274 MB | Needs `search_query:` / `search_document:` prefixes |
-| `mxbai-embed-large` | 1024 | 670 MB | Strong on English retrieval benchmarks |
-| `bge-m3` | 1024 | 1.2 GB | Multilingual. Useful if Vietnamese questions are supported |
-
-**LLMs** (M2 / 16 GB can run models up to about 8B parameters at Q4):
-| Model | Size | Role |
-|---|---|---|
-| `qwen2.5:0.5b` | ~0.4 GB | Baseline (expected to fail often; useful as the lower bound) |
-| `qwen2.5:1.5b`, `qwen2.5:3b` | 1–2 GB | Suggested in the assignment FAQ #7 (size scaling) |
-| `llama3.2:3b`, `gemma3:4b` | 2–3.3 GB | Cross-family comparison |
-| `qwen3:4b` (thinking off) | ~2.5 GB | Candidate default for the UI |
-
-**Recommendation:** default UI model **`qwen2.5:3b`** (good speed/quality on M2). The evaluation compares **0.5b → 1.5b → 3b** (scaling) plus **one other family** (`llama3.2:3b` or `gemma3:4b`). Temperature 0.1.
-
-### 6.4 Web UI framework — ✅ DECIDED: FastAPI backend + Streamlit frontend
-
-| Option | Effort | UX control | "Backend integration" story | Notes |
-|---|---|---|---|---|
-| **Streamlit** (single app) | ⭐ lowest | Medium (`st.chat_message`, `st.chat_input`, `st.write_stream`) | Imports `rag/` directly | Already in `requirements.txt`. Reruns the script on each interaction (state lives in `session_state`) |
-| Gradio `ChatInterface` | Low | Medium–low | Imports `rag/` directly | Fastest chat demo. Less flexible layout for the sources panel |
-| **FastAPI backend + Streamlit frontend** ⭐ | Medium | Medium | **Clear REST API** (`POST /chat` streaming, `GET /health`, `POST /index`, `GET /models`), UI is a client | Two containers, which makes Tasks 3 and 4 both stronger. API also testable with `curl` / Swagger `/docs` |
-| FastAPI + custom HTML/JS (or React) | High | Full | Clear REST API | Best-looking result. Most time spent on frontend rather than RAG |
-| Flask + Jinja | Medium | Full but manual | Clear | Older style. No async streaming out of the box |
-
-**Decision: FastAPI (backend) + Streamlit (frontend).**
-
-**Revised (2026-11-14): FastAPI + a static web UI.** Streamlit was implemented first and worked, but its layout could not show an answer and its evidence side by side, or open the cited handbook page. The replacement is plain HTML/CSS/JS with no build step. Fonts are bundled (IBM Plex), so it works offline. In Docker it is served by nginx, which also proxies `/api` to FastAPI. The REST contract did not change.
-
-API contract (`api/main.py`):
-| Method | Path | Body / Response |
-|---|---|---|
-| `GET` | `/health` | `{status, ollama: bool, qdrant: bool, collection, n_chunks}` |
-| `GET` | `/models` | Installed Ollama chat models |
-| `POST` | `/chat` | `{question, history: [{role, content}], model?, top_k?, temperature?, mode: strict\|fallback}` → `{answer, sources: [{page, section, score, text}], standalone_query, latency_ms}` |
-| `POST` | `/chat/stream` | Same body. Server-Sent Events: one `sources` event, then `token` events, then `done` (full result) or `error` |
-| `POST` | `/index` | Re-index `data/documents` (or an uploaded PDF into a named collection) |
-
-The web UI (`web/`) is a pure client. It keeps the chat history in memory, and it talks to the API only through relative `/api/...` URLs, or through same-origin URLs when FastAPI serves it at `/ui/` in local development. Two read-only endpoints support the evidence panel: `GET /documents` (files and page counts) and `GET /documents/{name}/pages/{n}.png` (a page rendered with PyMuPDF).
-
-### 6.5 Docker topology — ✅ DECIDED: option C (full stack + host-Ollama override)
-
-> ⚠️ **Important on macOS:** Docker Desktop containers **cannot use the Apple-Silicon GPU (Metal)**.
-> Ollama inside a container on the M2 runs **CPU-only** (measured: about 38 s vs 14 s per answer with qwen2.5:3b). Native Ollama on macOS uses Metal.
-
-| Option | Services | Pros | Cons |
-|---|---|---|---|
-| A. App container + **host** Ollama | `app` → `host.docker.internal:11434` | Fast on Mac (Metal GPU). Small image | Not fully self-contained (Ollama must be installed on the host) |
-| B. Fully containerised | `ollama` + `app` (+ `ui`) (+ `qdrant`) | One-command, fully reproducible. Works on any Linux (with NVIDIA GPU passthrough via `deploy.resources`) | Slow on Mac (CPU). First run downloads models into a volume |
-| **C. Both** ⭐ | Default = B. Adding `docker-compose.host-ollama.yml` = A | Reproducible *and* fast for the demo. Easy to explain in the report | Slightly more compose config |
-
-**Decision: C.** Fully containerised by default (graders get one command). On the Mac, record the demo with host Ollama for speed and explain the GPU trade-off in the report.
-
-Implementation note: C is built as a base compose file plus an override file, not as compose profiles. With profiles, the default `docker compose up` would need a flag or a `.env` file to start the bundled Ollama. The override moves `ollama` and `ollama-init` into an inactive profile and points the API at `host.docker.internal`.
-
-### 6.6 Evaluation tooling — recommendation
-- **Manual labels** (required by the assignment): Correct / Incomplete / Incorrect / Ambiguous / Correct refusal, with a short reason.
-- **Automatic retrieval metrics** (cheap and objective): Hit@K and MRR against each question's gold page(s).
-- **Optional LLM-as-judge**: a larger local model (e.g. `qwen2.5:7b`) scores faithfulness and relevance. RAGAS is listed in the sample requirements, but small local judges are unreliable, so judge scores are reported only as a secondary signal.
-
----
-
-## 7. Evaluation Plan
-
-**Test set**: `eval/questions.yaml`, ≥ 30 questions, each with `id`, `question`, `category`, `gold_answer`, `gold_pages`, `type`.
-
-| Category | # | Example questions |
-|---|---|---|
-| Program requirements | 6 | How many credits are required for the major? Total credits to graduate? Requirements for declaring the major? |
-| Minor | 3 | What do I need for a minor in Applied Mathematics? |
-| Course offerings / catalogue | 6 | How often is MATH 301 offered? What are the prerequisites for Stochastic Calculus? Which courses are cross-listed with ECON? |
-| Course content | 4 | What does MATH 308 Statistical Learning cover? |
-| Learning outcomes (PLO/MLO/GA) | 4 | What is MLO 4? Which graduate attributes map to MLO 3? |
-| Tracks & careers | 3 | What are the three tracks? Where have graduates gone for graduate study? |
-| Policies / assessment | 3 | Can one course count for two requirements? Who can take the Research Seminar? |
-| Flowchart (OCR-dependent) | 2 | How many foundation courses are required according to the flowchart? |
-| Ambiguous (handbook conflicts) | 3 | Must one elective applied course be at 300-level? What is MATH 306? |
-| Out-of-scope (should refuse) | 3 | What is the tuition fee? Who is the CS department chair? |
-| Multi-turn follow-ups | 3 | "What is MATH 205?" → "What are its prerequisites?" |
-
-**Experiment grid** (each run → `eval/results/<run_id>.csv`): `parser × chunking × embed_model × llm × prompt_mode`. Logged per question: retrieved pages, Hit@K, answer, label, latency (retrieval / generation), and tokens.
-
-**Reported outputs:** a summary table (accuracy by label, Hit@5, MRR, mean latency per configuration), a per-category heat-map, and 2–3 annotated examples per label with a root-cause analysis (retrieval miss vs. LLM misreading vs. a conflict in the source document).
-
----
-
-## 8. Repository Layout
-
-The layout mirrors the required submission folders (`source_code/`, `docker/`, `report/`, `demo_video/`):
-
-```
-Document-RAG-for-FUV/
-├── README.md                     # this file
-├── .gitignore  .env.example
 ├── source_code/
-│   ├── rag/                      # core package (config, loaders, ocr, chunking, index, retriever, prompts, chain, cli)
-│   ├── api/                      # FastAPI app (REST + SSE streaming)
-│   ├── web/                      # static web UI (HTML/CSS/JS, bundled IBM Plex fonts)
-│   ├── eval/                     # questions.yaml, run_eval.py, results/, analysis notebook
-│   ├── data/documents/           # MATH_MajorHandbook.pdf (+ test PDF for Task 1)
-│   ├── config.yaml
-│   ├── requirements.txt          # slim runtime deps
-│   └── tests/                    # unit tests: loader, chunker, retriever smoke test
-├── docker/
-│   ├── Dockerfile.api            # FastAPI + RAG core + Tesseract
-│   ├── Dockerfile.ui             # nginx serving web/ + /api reverse proxy
-│   ├── nginx.conf
-│   ├── docker-compose.yml        # ollama + ollama-init + qdrant + api + ui
-│   ├── docker-compose.host-ollama.yml  # override: use Ollama on the host (Metal GPU)
-│   ├── ollama-init.sh            # pulls models on first start
-│   └── README.md                 # deployment guide
-├── report/                       # report source + report.pdf
-├── demo_video/                   # links.md (videos hosted on Drive if they are too large)
-├── docs/screenshots/             # UI screenshots for README and report
-└── final-project/                # original assignment material (reference only)
+│   ├── rag/                  # RAG core: config, loaders (PDF + OCR), chunking, index (Qdrant), prompts, chain, CLI
+│   ├── api/main.py           # FastAPI backend (REST + Server-Sent Events)
+│   ├── web/                  # web UI: static HTML/CSS/JS, bundled IBM Plex fonts
+│   ├── eval/                 # test set (questions.yaml), runner, results, manual labels, analysis.md
+│   ├── tests/                # unit tests (pytest)
+│   ├── data/documents/       # documents to index: MATH_MajorHandbook.pdf
+│   ├── config.yaml           # pipeline settings (every key can be overridden by an environment variable)
+│   └── requirements.txt
+├── docker/                   # Dockerfiles, docker-compose.yml, host-Ollama override, nginx.conf, deployment guide
+├── report/                   # report.md, report.pdf, build.sh
+├── demo_video/               # demo video links
+├── docs/                     # SPECIFICATION.md (design options and decisions), screenshots/
+└── .env.example              # environment variables for local runs
 ```
 
----
+## 2. Quick start with Docker
 
-## 9. Installation & Usage (target)
+**Requirements:**
 
-> Planned commands. They will be verified once the implementation is done.
+- Docker Desktop 4.x (macOS/Windows), or Docker Engine 24+ with Compose v2.20+ (Linux);
+- about 8 GB of RAM available to Docker and 6 GB of free disk.
 
-**Local (conda)**
 ```bash
-# 1. Ollama
-brew install ollama && ollama serve &
-ollama pull nomic-embed-text && ollama pull qwen2.5:3b
+git clone https://github.com/amyas-lab/Document-RAG-for-FUV.git
+cd Document-RAG-for-FUV/docker
+docker compose up --build -d
+```
 
-# 2. Python env
+The first start takes 5–10 minutes. Docker builds the images, `ollama-init` pulls `qwen2.5:3b` and
+`nomic-embed-text` (about 2.3 GB), and the API indexes the handbook. You can follow the progress with
+`docker compose logs -f ollama-init api`.
+
+| Service | URL |
+|---|---|
+| Web UI | <http://localhost:8080> |
+| API docs (Swagger) | <http://localhost:8000/docs> |
+| Qdrant dashboard | <http://localhost:6333/dashboard> |
+
+**Faster on Apple Silicon.** Docker on macOS cannot use the Metal GPU, so the bundled Ollama runs on CPU (about
+38 s per answer on an M2). To use Ollama installed on the host instead (about 5–14 s per answer):
+
+```bash
+ollama pull qwen2.5:3b && ollama pull nomic-embed-text      # on the host
+docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up --build -d
+```
+
+**Stop and clean up:**
+
+```bash
+docker compose down        # keeps the index and models
+docker compose down -v     # also removes them
+```
+
+See [`docker/README.md`](docker/README.md) for configuration, tests and troubleshooting.
+
+## 3. Local installation
+
+**Prerequisites:**
+
+- Python **3.11** (some dependencies do not support 3.13+ yet);
+- [Ollama](https://ollama.com);
+- Tesseract, used for OCR of image-only pages:
+  - macOS: `brew install ollama tesseract`;
+  - Ubuntu/Debian: `sudo apt install tesseract-ocr`, plus the Linux installer from ollama.com.
+
+```bash
+git clone https://github.com/amyas-lab/Document-RAG-for-FUV.git
+cd Document-RAG-for-FUV
+
+# Python environment (conda or venv)
 conda create -n rag python=3.11 -y && conda activate rag
 pip install -r source_code/requirements.txt
 
-# 3. Index + ask (Qdrant embedded mode: QDRANT_PATH=./qdrant_local; Tesseract: brew install tesseract)
-cd source_code
-python -m rag.cli index --reindex
-python -m rag.cli ask -q "What are the prerequisites for MATH 305?"
+# Models (Ollama must be running: `ollama serve`, or the desktop app / brew service)
+ollama pull qwen2.5:3b
+ollama pull nomic-embed-text
 
-# 4. API + web UI (one process)
-uvicorn api.main:app --port 8000   # API docs: http://localhost:8000/docs, UI: http://localhost:8000/ui/
-
-# 5. Evaluation
-python -m eval.run_eval --config eval/grid.yaml
+# Optional: local settings
+cp .env.example .env
 ```
 
-**Docker**
+Every command below runs from `source_code/`. Without `QDRANT_URL`, Qdrant runs in **embedded mode**: the index is a
+folder under `data/`, and no server is needed.
+
+## 4. Usage
+
+### Command line
+
 ```bash
-cd docker
-docker compose up --build -d                                                         # fully containerised
-docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up --build -d # use host Ollama (fast on Mac)
+cd source_code
+python -m rag.cli index                      # build the index (skipped if it is up to date; --reindex forces it)
+python -m rag.cli ask -q "What are the prerequisites for MATH 305?"
+python -m rag.cli ask -q "How often is MATH 301 offered?" --show-context
+python -m rag.cli chat                       # multi-turn conversation in the terminal
 ```
 
----
+Inspection tools, mostly for Task 1:
 
-## 10. Decision Log
+```bash
+python -m rag.cli extract                    # write the extracted text of each page to data/extracted/
+python -m rag.cli chunks --page 14 --full    # show the chunks of page 14 (OCR of the flowchart)
+python -m rag.cli chunks --grep "MATH 305"
+```
 
-| # | Decision | Choice | Rationale | Date |
-|---|---|---|---|---|
-| D1 | Handbook | **B.S. Applied Mathematics** | Chosen by the author | 2026-11-01 |
-| D2 | Vector DB | **Qdrant** (server in Docker, embedded locally), hybrid dense + BM25 | Exact course-code matching, dashboard, real multi-service deployment | 2026-11-01 |
-| D3 | PDF parser / OCR | **pypdf** (baseline) + **pymupdf4llm** (improved), switch `PDF_PARSER`; **Tesseract** OCR for pages with no text layer | Comparable in the report; recovers the page-14 flowchart | 2026-11-01 |
-| D4 | UI architecture | **FastAPI + static web UI (nginx)**, replacing the first Streamlit version | Answer and evidence side by side, cited page viewer, offline fonts; same API | 2026-11-14 |
-| D5 | Docker topology | Full stack by default + **host-Ollama override file** for Metal GPU on Mac | Reproducible and fast for the demo | 2026-11-01 |
-| D6 | Default LLM / embedding | `qwen2.5:3b` / `nomic-embed-text` (`qwen2.5:1.5b` recommended for CPU-only Docker) | Evaluation: 1.5B ≈ 3B quality at 2× speed; 0.5B hallucinates; mxbai only helps with pypdf | 2026-11-01 |
-| D7 | Prompt mode | Strict grounding + citations (baseline fallback kept as an experiment) | Same score as fallback (0.73 vs 0.76), but it fails by refusing rather than guessing | 2026-11-01 |
+Global options apply to every subcommand and are written before it, for example
+`python -m rag.cli --model qwen2.5:1.5b --mode fallback -k 8 ask -q "..."`:
 
----
-
-## 11. Known Limitations (anticipated)
-- Small local LLMs misread dense tables (the MLO matrix, the catalogue) even when retrieval is correct.
-- The flowchart (page 14) is image-only. Without OCR its content is invisible, and OCR of a styled diagram is noisy.
-- The handbook contradicts itself in places (§3). The bot can only surface the conflict, not resolve it.
-- CPU-only inference in Docker on macOS is slow.
-- English-only evaluation. Vietnamese questions depend on the embedding model's multilingual ability.
-- Answers are limited to handbook v1.0 (Sep 2025). Policy changes after that date are not covered.
-
-## 12. Milestones
-| Week | Work |
+| Option | Values |
 |---|---|
-| 1 | Repo scaffold, config, PDF loader (Task 1), baseline index, first video |
-| 2 | Structure-aware chunking, strict prompt, test set, evaluation script, model comparison (Task 2) |
-| 3 | API + UI (Task 4), Docker + compose (Task 3), screenshots |
-| 4 | Report, 4 videos, README finalisation, submission packaging `ADL-<StudentID>-project.zip` |
+| `--parser` | `pypdf`, `pymupdf` |
+| `--chunking` | `fixed`, `structure` |
+| `--retrieval` | `hybrid`, `dense` |
+| `--model`, `--embed` | any Ollama model |
+| `--mode` | `strict`, `fallback` |
+| `-k` | number of passages |
+
+### API and web UI
+
+```bash
+cd source_code
+uvicorn api.main:app --port 8000
+# API docs: http://localhost:8000/docs     Web UI: http://localhost:8000/ui/
+```
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/health` | Ollama and Qdrant status, number of indexed chunks, default settings |
+| `GET` | `/models` | Installed Ollama chat models |
+| `POST` | `/chat` | Ask a question; returns the answer, sources, rewritten query and latency |
+| `POST` | `/chat/stream` | Same, as Server-Sent Events: `sources`, then `token` events, then `done` |
+| `POST` | `/index` | Re-index `data/documents` (`{"force": true}` rebuilds unconditionally) |
+| `GET` | `/documents`, `/documents/{name}`, `/documents/{name}/pages/{n}.png` | Indexed files, the file itself, a rendered page |
+
+```bash
+curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' -d '{
+  "question": "What are its prerequisites?",
+  "history": [{"role": "user", "content": "What is MATH 205 about?"},
+              {"role": "assistant", "content": "MATH 205 Probability covers ..."}]
+}'
+```
+
+The request body also accepts `model`, `top_k`, `temperature` and `mode` (`strict` or `fallback`).
+
+**In the web UI:**
+
+- Click a page chip such as `p. 21` to highlight the passage it refers to.
+- Use **Open page** to see the handbook page itself.
+- Use **New chat** to start over.
+- The settings button (top right) changes the model, answer mode, number of passages, temperature and appearance.
+
+| | |
+|---|---|
+| ![Cited handbook page](docs/screenshots/03-cited-handbook-page.jpg) | ![Out-of-scope refusal](docs/screenshots/04-out-of-scope-refusal.jpg) |
+
+### Adding documents
+
+Put `.pdf` or `.txt` files in `source_code/data/documents/` and then run `python -m rag.cli index`, call
+`POST /index`, or restart the API. The index stores a hash of the documents and settings, so it is rebuilt only when
+something changed.
+
+## 5. Configuration
+
+Settings live in [`source_code/config.yaml`](source_code/config.yaml). Any key can be overridden by an
+environment variable with the same name in upper case, in the shell, in `.env` or in Docker Compose.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `LLM_MODEL` | `qwen2.5:3b` | Ollama chat model |
+| `EMBED_MODEL` | `nomic-embed-text` | Ollama embedding model (a new one gets its own collection) |
+| `OLLAMA_URL` | `http://127.0.0.1:11434` | Ollama server |
+| `QDRANT_URL` | empty | Qdrant server (e.g. `http://localhost:6333`). Empty means embedded mode |
+| `QDRANT_PATH` | `data/qdrant_local` | Folder for embedded mode |
+| `PDF_PARSER` | `pymupdf` | `pymupdf` (Markdown, tables) or `pypdf` (baseline) |
+| `CHUNKING` | `structure` | `structure` (heading-aware) or `fixed` (baseline splitter) |
+| `RETRIEVAL_MODE` | `hybrid` | `hybrid` (dense + BM25) or `dense` |
+| `TOP_K` | `5` | Passages per answer (follow-up questions get 3 more) |
+| `PROMPT_MODE` | `strict` | `strict` (handbook only, with citations) or `fallback` (baseline prompt) |
+| `TEMPERATURE` | `0.1` | Generation temperature |
+| `OCR_ENABLED` | `true` | OCR pages with fewer than `OCR_MIN_CHARS` characters of text |
+
+## 6. Evaluation and tests
+
+```bash
+cd source_code
+pytest -q tests                                        # 11 offline tests (parsing, OCR, chunking, metrics)
+python -m eval.run_eval answers --models qwen2.5:3b    # answer the 45 test questions
+python -m eval.run_eval retrieval                      # retrieval ablation grid (no LLM)
+python -m eval.run_eval report                         # write eval/results/summary.md
+bash eval/run_all.sh                                   # every experiment (about 1 h on an M2)
+```
+
+The test set ([`eval/questions.yaml`](source_code/eval/questions.yaml)) has 45 questions:
+
+- 38 answerable (including 3 multi-turn);
+- 4 ambiguous, where the handbook contradicts itself;
+- 3 out of scope.
+
+Each question has gold pages and key facts. The runner reports retrieval metrics (Hit@k, MRR, context recall) and
+labels each answer. Corrections from the manual review are in
+[`eval/manual_labels.yaml`](source_code/eval/manual_labels.yaml).
+
+| Configuration (qwen2.5:3b, strict prompt) | Correct | Incorrect | False refusal | Score |
+|---|---|---|---|---|
+| Baseline-like: pypdf, fixed chunks, dense | 19 | 8 | 7 | 0.58 |
+| Improved retrieval (round 2) | 27 | 6 | 3 | 0.73 |
+| **Deployed (round 3)** | **29** | 6 | 2 | **0.77** |
+
+Model and prompt comparisons, the retrieval ablation and the error analysis are in
+[`eval/analysis.md`](source_code/eval/analysis.md).
+
+## 7. How it works
+
+```
+PDF ─► PyMuPDF / pymupdf4llm ─► clean ─► Tesseract OCR (image-only pages) ─► structure-aware chunker
+    ─► nomic-embed-text (dense) + BM25 (sparse) ─► Qdrant
+
+question + history ─► query rewriting ─► hybrid search (RRF) ─► top-k passages with page numbers
+    ─► strict prompt ─► qwen2.5:3b (Ollama) ─► answer with citations ─► FastAPI (SSE) ─► web UI
+```
+
+The [report](report/report.pdf) explains the design choices, the three evaluation rounds and the known limitations.
+The options considered for each component (vector database, PDF parser, UI framework, Docker topology) are
+in [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md).
+
+## 8. Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `Connection refused` to Ollama | Start Ollama (`ollama serve` or the desktop app) and check `OLLAMA_URL` |
+| `model "…" not found` | `ollama pull <model>`; in Docker, add it to `EXTRA_MODELS` |
+| `Storage folder … is already accessed by another instance of Qdrant` | Embedded Qdrant allows one process at a time. Stop the other process (for example a running `rag.cli chat`), or set `QDRANT_PATH` to another folder |
+| Page 14 (flowchart) has no text | Install Tesseract (`tesseract --version`) and re-index with `python -m rag.cli index --reindex` |
+| Answers are slow in Docker on a Mac | Use the host-Ollama override (Section 2) |
+| `pip install` fails on Python 3.13+ | Use Python 3.11 |
+
+## 9. Project deliverables
+
+| Task | Where |
+|---|---|
+| 1. PDF support | [`rag/loaders.py`](source_code/rag/loaders.py), [`rag/chunking.py`](source_code/rag/chunking.py), `rag.cli extract / chunks` |
+| 2. Handbook chatbot and evaluation | [`source_code/eval/`](source_code/eval/), [`analysis.md`](source_code/eval/analysis.md) |
+| 3. Docker deployment | [`docker/`](docker/), [`docker/README.md`](docker/README.md) |
+| 4. Web UI | [`source_code/web/`](source_code/web/), [`source_code/api/`](source_code/api/), [`docs/screenshots/`](docs/screenshots/) |
+| 5. Report | [`report/report.pdf`](report/report.pdf) (source: [`report.md`](report/report.md)) |
+| 6. Demo videos | [`demo_video/`](demo_video/) |
+| 7. Repository and README | this file |
+
+**Acknowledgements.**
+
+- Baseline code and handbook: CS311 course materials.
+- Fonts: IBM Plex (SIL Open Font License, [`web/fonts/OFL.txt`](source_code/web/fonts/OFL.txt)).
