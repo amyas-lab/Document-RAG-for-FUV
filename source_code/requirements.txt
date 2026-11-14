@@ -21,7 +21,6 @@ requests>=2.31
 # --- Serving (Task 4) ---
 fastapi>=0.115
 uvicorn[standard]>=0.30
-streamlit>=1.40
 
 # --- Dev ---
 pytest>=8.0

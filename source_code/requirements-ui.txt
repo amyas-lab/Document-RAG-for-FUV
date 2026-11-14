@@ -1,3 +1,0 @@
-# Streamlit client only (docker/Dockerfile.ui). The UI talks to the API over HTTP.
-streamlit>=1.40
-requests>=2.31
