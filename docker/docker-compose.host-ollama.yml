@@ -1,0 +1,18 @@
+# Override: use the Ollama server running on the host (Metal GPU on Apple Silicon, CUDA on Linux)
+# instead of the `ollama` container. Pull the models on the host first:
+#
+#   ollama pull qwen2.5:3b && ollama pull nomic-embed-text
+#   docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up --build
+#
+# On Linux, start the host server with OLLAMA_HOST=0.0.0.0 so containers can reach it.
+
+services:
+  ollama:
+    profiles: [bundled-ollama]       # not started unless that profile is requested
+  ollama-init:
+    profiles: [bundled-ollama]
+  api:
+    environment:
+      OLLAMA_URL: http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
