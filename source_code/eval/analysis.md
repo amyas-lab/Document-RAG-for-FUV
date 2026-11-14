@@ -1,7 +1,10 @@
 # Task 2: Evaluation and error analysis
 
-Applied Mathematics Major Handbook chatbot. All numbers come from `eval/results/summary.md`,
-which is regenerated with `bash eval/run_all.sh` (about 1 h on an Apple M2 with 16 GB, Ollama on Metal).
+Applied Mathematics Major Handbook chatbot. Sections 1–6 analyse **round 2**: the full experiment grid, with
+results in `eval/results/iteration2/` and round-2 manual labels in `iteration2/manual_labels.yaml`.
+Section 7 covers **round 3**, the deployed system: only the main configuration was re-run, with results in
+`eval/results/` and labels in `eval/manual_labels.yaml`. Round 1 is kept in `eval/results/iteration1/`.
+Everything can be regenerated with `bash eval/run_all.sh` (about 1 h on an Apple M2 with 16 GB, Ollama on Metal).
 
 ## 1. Method
 
@@ -242,11 +245,22 @@ Fixes (`CHUNKER_VERSION = 3`):
   - **Reading tables.** In "Which sample advanced courses are offered every other year?" the catalogue records
     were retrieved, but the model listed MATH 308 (once a year) and missed several courses.
 
-Re-running the 45 questions with these changes (automatic labels, qwen2.5:3b strict): context recall
-0.917 → 0.917 (unchanged); 26 correct vs 27 before.
-- **Gained:** F1 (flowchart: "at least 2 advanced courses").
-- **Lost:** C8 (now guesses "3 credits") and P3 (one strategy missing).
-- MT1–MT3 keep their labels.
+**Round 3 result** (qwen2.5:3b, strict, all 45 answers manually reviewed; 2 automatic labels corrected,
+C3 and A2):
+
+| Round | Correct | Incompl. | Incorrect | False refusal | Correct refusal | Score | Context recall | Hit@1 | Hit@5 |
+|---|---|---|---|---|---|---|---|---|---|
+| 2 | 27 | 6 | 6 | 3 | 3 | 0.73 | 0.92 | 0.83 | 0.95 |
+| **3 (deployed)** | **29** | 5 | 6 | **2** | 3 | **0.77** | 0.92 | 0.76 | 0.95 |
+
+- **Gained:** F1 and F2 (flowchart, wrong or incomplete in every earlier run), and A1 (incorrect → incomplete:
+  it now cites p. 12 correctly instead of attributing the 300-level rule to p. 9).
+- **Lost:** C8 (now guesses "3 credits", previously refused) and A2 (merges both MATH 306 versions into one wrong
+  sentence).
+- Hit@1 dropped because the new, smaller list chunks compete with requirement chunks for the first rank. The
+  evidence still arrives (context recall unchanged).
+
+- MT1–MT3 keep their labels (MT1 and MT3 correct, MT2 incorrect).
 
 At temperature 0.1, differences of one or two questions are within run-to-run noise. The tables in §2–§5
 were produced before these changes.

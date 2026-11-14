@@ -1,29 +1,13 @@
-# Manual review of the automatic labels (Task 2).
+# Manual review of the automatic labels (Task 2, round 3: CHUNKER_VERSION 3, follow-up prompt).
 #
-# Every answer of the three main qwen2.5:3b runs was read and compared with the gold answer and
-# the retrieved excerpts. Only answers whose automatic label was wrong are listed here; all other
-# automatic labels were confirmed. Labels: correct | incomplete | incorrect | false_refusal |
-# correct_refusal | hallucination.
+# All 45 answers of the deployed configuration (qwen2.5:3b, strict, pymupdf/structure/hybrid) were read
+# and compared with the gold answer and the retrieved excerpts. Only answers whose automatic label was
+# wrong are listed; all other automatic labels were confirmed. Round-2 reviews are kept in
+# results/iteration2/manual_labels.yaml.
 #
 # Rule for "ambiguous" questions (the handbook contradicts itself): correct = reports both versions;
 # incomplete = reports one version correctly; incorrect = wrong content or wrong citation.
 
 answers__qwen2.5-3b__pymupdf-structure-hybrid__strict:
   C3: {label: incorrect, note: "Lists MATH 308 (cross-listed with CS, not ECON); misses MATH 105 and 204."}
-  A1: {label: incorrect, note: "Says 'at least one at 300 level' and cites p. 9, but p. 9 says 200-level or higher."}
-
-answers__qwen2.5-3b__pymupdf-structure-hybrid__fallback:
-  C3: {label: incorrect, note: "Lists MATH 301 (not cross-listed); misses MATH 105 and 304."}
-  C4: {label: incorrect, note: "Says the frequency is not given, then guesses 'likely every other year' (true answer: twice per year)."}
-  C7: {label: incomplete, note: "Both courses named, but merged into one garbled item ('IS 312 with Course Code ECON 209')."}
-  C8: {label: incorrect, note: "Invents '3 credits' from general knowledge; the regex matched '4 credits for seminars'."}
-  D2: {label: incomplete, note: "Claims the tools are not mentioned, then says 'likely Matlab or Python'."}
-  A1: {label: incorrect, note: "Answers 'yes' and attributes the 300-level rule to the Minor Requirements."}
-
-answers__qwen2.5-3b__pypdf-fixed-dense__strict:
-  R5: {label: incorrect, note: "Adds a false condition: 'and earn a total of at least 128 credits' to declare the major."}
-  C8: {label: correct, note: "Correct value (4 credits), weak justification."}
-  L3: {label: incorrect, note: "Describes the program objectives of section 5.1.2, not the PEOs."}
-  P3: {label: incomplete, note: "Lists teaching techniques (case studies, ...) but not the three strategies."}
-  A1: {label: incorrect, note: "Answers 'yes, 300 level' while quoting p. 9 which says 200-level or higher."}
-  A4: {label: incomplete, note: "Gives only the course-description version (MATH 205 and 104); no mention of the conflict."}
+  A2: {label: incorrect, note: "Merges both versions into one wrong statement: 'MATH 306: Numerical Analysis ... helps students build and manage investment portfolios'."}
