@@ -21,9 +21,11 @@ source_code/data/extracted/
 # Office lock files shipped in the assignment folder
 **/~$*
 
-# Large media (videos are linked from demo_video/links.md)
+# Large media: raw recordings and archives stay local; compressed demo MP4s are committed
 *.mp4
 *.mov
+*.zip
+!demo_video/*.mp4
 
 # Assignment material (course PDFs and sample code): kept locally, not part of the repository
 final-project/
